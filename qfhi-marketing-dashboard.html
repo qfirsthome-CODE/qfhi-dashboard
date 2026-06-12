@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Marketing Department Health Dashboard</title>
+<style>
+  :root {
+    --bg: #0e1116;
+    --panel: #151a22;
+    --panel-2: #1b212b;
+    --line: #283040;
+    --text: #e6eaf0;
+    --muted: #8a93a3;
+    --faint: #5d6675;
+
+    --critical: #DC2626;
+    --critical-tint: rgba(220,38,38,0.14);
+    --atrisk: #F97316;
+    --atrisk-tint: rgba(249,115,22,0.14);
+    --healthy: #EAB308;
+    --healthy-tint: rgba(234,179,8,0.14);
+    --strong: #22C55E;
+    --strong-tint: rgba(34,197,94,0.14);
+    --none: #5d6675;
+    --none-tint: rgba(93,102,117,0.10);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- App bar ---------- */
+  .appbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 24px;
+    background: linear-gradient(180deg, #11161e, #0e1116);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .appbar .brand h1 { font-size: 19px; margin: 0; letter-spacing: 0.2px; }
+  .appbar .brand .sub { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+
+  .overall-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    padding: 6px 0 18px;
+  }
+  .overall-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+  }
+  .overall-row { display: flex; align-items: center; gap: 16px; }
+  .overall-header .big {
+    font-size: 60px;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -1.5px;
+    color: var(--c, var(--text));
+  }
+  .overall-header .big small { font-size: 24px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+  .overall-header .status-pill {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--line);
+    background: var(--panel);
+    position: sticky;
+    top: 73px;
+    z-index: 15;
+  }
+  button, .btn {
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: border-color .12s, background .12s;
+  }
+  button:hover, .btn:hover { border-color: #3a4658; background: #222a36; }
+  button.primary { background: #2a6df0; border-color: #2a6df0; }
+  button.primary:hover { background: #3b79f2; }
+  button.danger:hover { border-color: var(--critical); color: #ffd7d8; }
+
+  .viewtoggle { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; margin-left: auto; }
+  .viewtoggle button { border: none; border-radius: 0; background: transparent; padding: 8px 16px; }
+  .viewtoggle button.active { background: #2a6df0; }
+  .spacer { flex: 1; }
+
+  /* ---------- Pillar summary strip ---------- */
+  .strip-wrap { max-width: 1500px; margin: 0 auto; padding: 18px 24px 0; }
+  .pillar-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .strip-card {
+    flex: 1 1 150px;
+    min-width: 132px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 11px 13px;
+    border: 1px solid var(--line);
+    border-left: 5px solid var(--none);
+    border-radius: 11px;
+    background: var(--panel-2);
+    cursor: pointer;
+    transition: transform .08s, border-color .12s;
+  }
+  .strip-card.tinted { background: var(--t); border-left-color: var(--c); }
+  .strip-card:hover { transform: translateY(-2px); border-color: #3a4658; }
+  .strip-card .s-score { font-weight: 800; font-size: 23px; line-height: 1; white-space: nowrap; }
+  .strip-card .s-score small { font-size: 11px; font-weight: 600; color: var(--muted); }
+  .strip-card .s-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .strip-card .s-name { font-weight: 700; font-size: 13px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .strip-card .s-status { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+
+  /* ---------- Inline rename ---------- */
+  .pencil {
+    background: transparent; border: none; color: var(--muted);
+    cursor: pointer; font-size: 12px; line-height: 1; padding: 2px 5px;
+    border-radius: 6px; vertical-align: middle; opacity: .4;
+    transition: opacity .12s, color .12s, background .12s;
+  }
+  .pillar-head:hover .pencil, .subsection-head:hover .pencil { opacity: .85; }
+  .pencil:hover { color: var(--text); background: rgba(255,255,255,0.10); opacity: 1; }
+  .title-edit {
+    font: inherit; color: var(--text);
+    background: var(--bg); border: 1px solid #2a6df0; border-radius: 7px;
+    padding: 2px 8px; min-width: 180px; max-width: 100%;
+  }
+
+  /* ---------- Charts ---------- */
+  .charts-section { max-width: 1500px; margin: 0 auto; padding: 20px 24px 0; }
+  .charts-grid { display: flex; flex-wrap: wrap; gap: 14px; }
+  .chart-card {
+    flex: 1 1 360px;
+    min-width: 290px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 15px 16px 14px;
+  }
+  .chart-card h3 { margin: 0 0 10px; font-size: 13.5px; font-weight: 700; letter-spacing: .2px; }
+  .chart-card h3 .chart-sub { font-weight: 600; font-size: 12px; color: var(--muted); }
+  .chart-body svg { width: 100%; height: auto; display: block; }
+  .chart-empty {
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    min-height: 190px; color: var(--muted); font-size: 13px;
+  }
+
+  /* ---------- Layout ---------- */
+  main { padding: 22px 24px 80px; max-width: 1500px; margin: 0 auto; }
+
+  .pillar { margin-bottom: 26px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--panel); scroll-margin-top: 150px; }
+  .pillar-head {
+    display: flex; align-items: center; gap: 14px;
+    padding: 13px 18px;
+    border-left: 7px solid var(--none);
+    background: var(--panel-2);
+  }
+  .pillar-head h2 { font-size: 16px; margin: 0; flex: 1; letter-spacing: 0.2px; }
+  .pillar-head .weight { font-size: 11.5px; color: var(--muted); }
+  .pillar-head .weight input {
+    width: 52px; font: inherit; font-size: 12px; color: var(--text);
+    background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; margin-left: 4px;
+  }
+
+  .scorechip {
+    display: inline-flex; align-items: baseline; gap: 3px;
+    font-weight: 800; font-size: 17px;
+    padding: 4px 11px; border-radius: 9px;
+    border: 1px solid transparent;
+  }
+  .scorechip small { font-size: 11px; font-weight: 600; opacity: .8; }
+  .statuslabel { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+
+  .subsection { padding: 6px 18px 16px; }
+  .subsection-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 2px 10px; margin-top: 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .subsection-head h3 { font-size: 13.5px; margin: 0; flex: 1; color: var(--text); font-weight: 700; letter-spacing: 0.2px; }
+  .subsection-head .scorechip { font-size: 14px; padding: 2px 9px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 13px 14px 11px;
+    cursor: pointer;
+    position: relative;
+    background: var(--panel-2);
+    transition: transform .08s, border-color .12s;
+    overflow: hidden;
+  }
+  .card::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--none);
+  }
+  .card:hover { transform: translateY(-2px); border-color: #3a4658; }
+  .card .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .card .name { font-weight: 700; font-size: 14px; line-height: 1.25; padding-left: 4px; }
+  .card .score { font-weight: 800; font-size: 26px; line-height: 1; white-space: nowrap; }
+  .card .score small { font-size: 13px; font-weight: 600; color: var(--muted); }
+  .card .statuslabel { margin-top: 6px; padding-left: 4px; }
+  .card .note { color: var(--muted); font-size: 12.5px; margin-top: 7px; padding-left: 4px; min-height: 1px; }
+  .card .foot { display: flex; justify-content: space-between; align-items: center; margin-top: 11px; padding-left: 4px; gap: 8px; }
+  .card .owner { font-size: 12px; color: var(--text); font-weight: 600; }
+  .card .updated { font-size: 10.5px; color: var(--faint); }
+  .card .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; padding-left: 4px; }
+  .card .tag { font-size: 10.5px; background: rgba(255,255,255,0.06); color: var(--muted); padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); }
+  .card .calcbadge { font-size: 10px; color: var(--faint); text-transform: uppercase; letter-spacing: .5px; }
+
+  /* band helpers */
+  .b-critical { --c: var(--critical); --t: var(--critical-tint); }
+  .b-atrisk   { --c: var(--atrisk);   --t: var(--atrisk-tint); }
+  .b-healthy  { --c: var(--healthy);  --t: var(--healthy-tint); }
+  .b-strong   { --c: var(--strong);   --t: var(--strong-tint); }
+  .b-none     { --c: var(--none);     --t: var(--none-tint); }
+
+  .card.tinted { background: var(--t); }
+  .card.tinted::before { background: var(--c); }
+  .pillar-head.tinted { border-left-color: var(--c); }
+  .scorechip.tinted { background: var(--t); color: var(--c); border-color: var(--c); }
+  .statuslabel.colored { color: var(--c); }
+  .accent.colored { background: var(--c); }
+  .status-pill.colored { background: var(--t); color: var(--c); }
+
+  .dept-from { font-size: 10.5px; color: var(--faint); }
+
+  /* ---------- Modal ---------- */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(4,6,10,0.66);
+    display: none; align-items: flex-start; justify-content: center;
+    padding: 50px 16px; z-index: 50; overflow-y: auto;
+  }
+  .overlay.open { display: flex; }
+  .modal {
+    width: 100%; max-width: 540px; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 16px; padding: 22px 22px 20px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  }
+  .modal h2 { margin: 0 0 16px; font-size: 17px; }
+  .field { margin-bottom: 13px; }
+  .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; font-weight: 600; letter-spacing: .2px; }
+  .field input[type=text], .field input[type=number], .field select, .field textarea {
+    width: 100%; font: inherit; font-size: 14px; color: var(--text);
+    background: var(--bg); border: 1px solid var(--line); border-radius: 9px; padding: 9px 11px;
+  }
+  .field textarea { resize: vertical; min-height: 52px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+  .modetoggle, .dirtoggle { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+  .modetoggle button, .dirtoggle button { border: none; border-radius: 0; background: var(--bg); padding: 8px 16px; }
+  .modetoggle button.active, .dirtoggle button.active { background: #2a6df0; }
+
+  .calc-preview {
+    display: flex; align-items: center; gap: 10px;
+    margin-top: 4px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 9px;
+    font-size: 13px; color: var(--muted);
+  }
+  .calc-preview .scorechip { font-size: 16px; }
+
+  .modal-actions { display: flex; align-items: center; gap: 10px; margin-top: 20px; }
+  .modal-actions .spacer { flex: 1; }
+  button.complete { background: var(--strong-tint); border-color: var(--strong); color: var(--strong); }
+  button.complete:hover { background: rgba(34,197,94,0.22); border-color: var(--strong); }
+
+  /* ---------- Archive ---------- */
+  .card.archived { cursor: default; }
+  .card.archived:hover { transform: none; }
+  .completed-on { font-size: 11.5px; color: var(--text); font-weight: 600; margin-top: 7px; padding-left: 4px; }
+  .completed-on span { color: var(--muted); font-weight: 500; }
+  .restore-btn {
+    margin-top: 11px; width: 100%; font-size: 12.5px; padding: 7px 10px;
+    background: var(--panel); border: 1px solid var(--line);
+  }
+  .restore-btn:hover { border-color: #2a6df0; color: #cfe0ff; }
+  .type-badge {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px;
+    padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted);
+  }
+
+  .hidden { display: none !important; }
+  .empty { color: var(--muted); font-size: 13px; padding: 8px 2px; }
+  .hint { font-size: 11.5px; color: var(--faint); margin-top: 4px; }
+
+  /* ---------- Auth gate + account bar ---------- */
+  .authgate {
+    position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center;
+    padding: 24px; background: radial-gradient(1200px 600px at 50% -10%, #161c26, #0e1116);
+  }
+  .authcard {
+    text-align: center; max-width: 460px; width: 100%; padding: 38px 30px;
+    border: 1px solid var(--line); border-radius: 18px; background: var(--panel);
+    box-shadow: 0 24px 60px rgba(0,0,0,.5);
+  }
+  .authcard h1 { font-size: 20px; margin: 0 0 6px; }
+  .authsub { color: var(--muted); font-size: 13px; margin: 0 0 24px; }
+  button.big { font-size: 15px; padding: 12px 24px; }
+  .gate-status { margin-top: 16px; font-size: 13px; color: var(--atrisk); min-height: 18px; }
+  .gate-note { margin-top: 20px; font-size: 12px; color: var(--faint); line-height: 1.55; }
+
+  .account { display: flex; align-items: center; gap: 12px; }
+  .acct-meta { text-align: right; line-height: 1.3; }
+  .acct-line { font-size: 13px; font-weight: 600; }
+  .acct-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .save-status { color: var(--strong); margin-left: 6px; }
+  .badge { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .4px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); margin-left: 6px; }
+  .badge-edit { color: var(--strong); border-color: var(--strong); background: var(--strong-tint); }
+  .badge-view { color: var(--muted); }
+
+  /* Read-only users: remove every editing affordance */
+  body.readonly #btnAdd,
+  body.readonly #btnImport,
+  body.readonly #btnReset,
+  body.readonly .pencil,
+  body.readonly .restore-btn { display: none !important; }
+  body.readonly .weight input { pointer-events: none; opacity: .5; }
+
+  @media (max-width: 640px) {
+    .appbar { flex-direction: column; align-items: stretch; }
+    .overall { justify-content: flex-end; }
+    .row3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Sign-in gate: shown until the user authenticates and the Drive file loads -->
+<div class="authgate" id="authGate">
+  <div class="authcard">
+    <h1>Marketing Department Health Dashboard</h1>
+    <p class="authsub">Quality First Home Improvement · shared team scorecard</p>
+    <button class="primary big" id="btnSignIn">Sign in with Google</button>
+    <div class="gate-status" id="gateStatus"></div>
+    <p class="gate-note">Sign in with your own Google account. Whether you can edit or only view is controlled by the shared Drive file's permissions — there are no app passwords.</p>
+  </div>
+</div>
+
+<div class="appbar">
+  <div class="brand">
+    <h1>Marketing Department Health Dashboard</h1>
+    <div class="sub">Quality First Home Improvement · shared · seven-pillar live scorecard</div>
+  </div>
+  <div class="account hidden" id="account">
+    <div class="acct-meta">
+      <div class="acct-line"><span id="acctName"></span><span class="badge" id="acctRole"></span></div>
+      <div class="acct-sub"><span id="lastSaved"></span><span class="save-status" id="saveStatus"></span></div>
+    </div>
+    <button id="btnRefresh" title="Pull the latest data from Drive">↻ Refresh</button>
+    <button id="btnSignout">Sign out</button>
+  </div>
+</div>
+
+<div class="toolbar">
+  <button class="primary" id="btnAdd">+ Add Item</button>
+  <button id="btnExport">Export JSON</button>
+  <button id="btnImport">Import JSON</button>
+  <button class="danger" id="btnReset">Reset</button>
+  <input type="file" id="importFile" accept="application/json,.json" class="hidden" />
+  <div class="viewtoggle">
+    <button id="viewPillar" class="active">By Pillar</button>
+    <button id="viewDept">By Department</button>
+    <button id="viewArchive">Archive</button>
+  </div>
+</div>
+
+<div class="strip-wrap">
+  <div class="overall-header" id="overallBox">
+    <div class="overall-label">Overall Marketing Health</div>
+    <div class="overall-row">
+      <div class="big" id="overallBig">--<small>/100</small></div>
+      <div class="status-pill colored" id="overallStatus">—</div>
+    </div>
+  </div>
+  <div class="pillar-strip" id="pillarStrip"></div>
+</div>
+
+<div class="charts-section">
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>Work Distribution <span class="chart-sub" id="pieTotal"></span></h3>
+      <div class="chart-body" id="pieChart"></div>
+    </div>
+    <div class="chart-card">
+      <h3>Overall Health Over Time</h3>
+      <div class="chart-body" id="lineChart"></div>
+    </div>
+  </div>
+</div>
+
+<main id="view"></main>
+
+<!-- Editor modal -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <h2 id="modalTitle">Edit Item</h2>
+
+    <div class="field">
+      <label>Name</label>
+      <input type="text" id="fName" placeholder="Item name" />
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Pillar</label>
+        <select id="fPillar"></select>
+      </div>
+      <div class="field">
+        <label>Sub-section</label>
+        <select id="fSub"></select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Type</label>
+      <div class="modetoggle">
+        <button type="button" data-type="ongoing" id="typeOngoing">Ongoing</button>
+        <button type="button" data-type="campaign" id="typeCampaign">Campaign</button>
+      </div>
+      <div class="hint" id="typeHint"></div>
+    </div>
+
+    <div class="field">
+      <label>Scoring mode</label>
+      <div class="modetoggle">
+        <button type="button" data-mode="judged" id="modeJudged">Judged</button>
+        <button type="button" data-mode="calculated" id="modeCalc">Calculated</button>
+      </div>
+    </div>
+
+    <div class="field" id="judgedBlock">
+      <label>Score (1–10)</label>
+      <input type="number" id="fScore" min="1" max="10" step="1" />
+    </div>
+
+    <div id="calcBlock" class="hidden">
+      <div class="row3">
+        <div class="field">
+          <label>Target</label>
+          <input type="number" id="fTarget" step="any" />
+        </div>
+        <div class="field">
+          <label>Actual</label>
+          <input type="number" id="fActual" step="any" />
+        </div>
+        <div class="field">
+          <label>Direction</label>
+          <div class="dirtoggle">
+            <button type="button" data-dir="higher" id="dirHigher">Higher</button>
+            <button type="button" data-dir="lower" id="dirLower">Lower</button>
+          </div>
+        </div>
+      </div>
+      <div class="calc-preview">
+        Computed score:
+        <span class="scorechip tinted" id="calcPreview">—</span>
+        <span id="calcExpl"></span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Owner</label>
+      <input type="text" id="fOwner" placeholder="Owner name" />
+    </div>
+
+    <div class="field">
+      <label>Note</label>
+      <textarea id="fNote" placeholder="Short status line"></textarea>
+    </div>
+
+    <div class="field">
+      <label>Tags (comma-separated — used for the By Department view)</label>
+      <input type="text" id="fTags" placeholder="e.g. Canvassing" />
+    </div>
+
+    <div class="modal-actions">
+      <button class="danger" id="btnDelete">Delete</button>
+      <button class="complete hidden" id="btnComplete">✓ Mark Complete</button>
+      <div class="spacer"></div>
+      <button id="btnCancel">Cancel</button>
+      <button class="primary" id="btnSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   ⚙️  SETUP — fill these two values in (see SETUP-GUIDE.md)
+   ------------------------------------------------------------
+   GOOGLE_CLIENT_ID : the OAuth 2.0 Web Client ID from Google Cloud
+   DRIVE_FILE_ID    : the ID of the shared dashboard JSON file in Drive
+                      (the long string in the file's share/URL link)
+   ============================================================ */
+const GOOGLE_CLIENT_ID = "PASTE_YOUR_GOOGLE_CLIENT_ID_HERE";
+const DRIVE_FILE_ID    = "PASTE_YOUR_DRIVE_FILE_ID_HERE";
+
+// Drive read/write of files the signed-in user can already access.
+// In OAuth "Testing" mode this works for listed Test Users with no review.
+const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive";
+
+/* ============================================================
+   Constants & helpers
+   ============================================================ */
+const SEED_DATE = "2026-06-12T12:00:00.000Z";
+
+// Display order only — does not affect scores, items, or the (order-independent) rollups.
+const PILLAR_ORDER = ["Paid", "Organic", "Traditional", "Branding", "PR", "Team", "Scott"];
+
+function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
+
+let _idc = 0;
+function newId(prefix) {
+  _idc++;
+  return prefix + "_" + Date.now().toString(36) + "_" + _idc.toString(36);
+}
+
+/* Band logic. Operates on a 1–10 scale.
+   Table: 1-3 Critical(red), 4-5 At Risk(orange), 6-7 Healthy(teal), 8-10 Strong(green).
+   Decimal rollups fill the gaps: <4 critical, <6 at risk, <8 healthy, >=8 strong. */
+function band(score) {
+  if (score === null || score === undefined || isNaN(score)) {
+    return { key: "none", cls: "b-none", label: "No data" };
+  }
+  if (score < 4) return { key: "critical", cls: "b-critical", label: "Critical" };
+  if (score < 6) return { key: "atrisk",   cls: "b-atrisk",   label: "At Risk" };
+  if (score < 8) return { key: "healthy",  cls: "b-healthy",  label: "Healthy" };
+  return { key: "strong", cls: "b-strong", label: "Strong" };
+}
+
+/* ============================================================
+   Scoring & rollups
+   ============================================================ */
+function itemScore(item) {
+  if (item.mode === "calculated") {
+    const t = Number(item.target), a = Number(item.actual);
+    if (!t || !a) return 1; // divide-by-zero / zero guard
+    const ratio = item.direction === "lower" ? (t / a) : (a / t);
+    return clamp(Math.round(ratio * 10), 1, 10);
+  }
+  // judged: whatever was typed, clamped 1–10
+  return clamp(Number(item.score), 1, 10);
+}
+
+// Completed (archived) items are excluded from the live board and every rollup.
+function isActive(item) { return item.status !== "completed"; }
+function activeItems(sub) { return sub.items.filter(isActive); }
+
+function subScore(sub) {
+  const items = activeItems(sub);
+  if (items.length === 0) return null; // no active items -> excluded, not zero
+  const scores = items.map(itemScore);
+  return scores.reduce((a, b) => a + b, 0) / scores.length;
+}
+
+function pillarScore(p) {
+  const subs = p.subSections.map(subScore).filter(v => v !== null);
+  if (subs.length === 0) return null; // no scored items -> "No data"
+  return subs.reduce((a, b) => a + b, 0) / subs.length;
+}
+
+function overall100(state) {
+  const entries = state.pillars
+    .map(p => ({ s: pillarScore(p), w: (p.weight == null ? 1 : Number(p.weight)) }))
+    .filter(e => e.s !== null);
+  if (entries.length === 0) return null;
+  const wsum = entries.reduce((a, e) => a + e.w, 0);
+  if (wsum === 0) return null;
+  const wavg = entries.reduce((a, e) => a + e.s * e.w, 0) / wsum;
+  return Math.round(wavg * 10);
+}
+
+/* ============================================================
+   Seed data
+   ============================================================ */
+function mkItem(name, opts) {
+  opts = opts || {};
+  return {
+    id: newId("item"),
+    name: name,
+    mode: opts.mode || "judged",
+    score: (opts.score != null ? opts.score : 6),
+    target: (opts.target != null ? opts.target : 0),
+    actual: (opts.actual != null ? opts.actual : 0),
+    direction: opts.direction || "higher",
+    owner: opts.owner || "",
+    note: opts.note || "",
+    tags: opts.tags || [],
+    type: opts.type || "ongoing",   // "ongoing" | "campaign"
+    status: "active",               // "active" | "completed"
+    completionDate: null,
+    lastUpdated: SEED_DATE
+  };
+}
+function mkSub(name, items) { return { id: newId("sub"), name: name, items: items }; }
+function mkPillar(name, subs, opts) {
+  opts = opts || {};
+  return {
+    id: newId("pillar"),
+    name: name,
+    weight: opts.weight != null ? opts.weight : 1.0,
+    freeform: !!opts.freeform,
+    subSections: subs
+  };
+}
+
+function seedState() {
+  _idc = 0;
+  return {
+    version: 1,
+    history: [],
+    pillars: [
+      mkPillar("Branding", [
+        mkSub("External Brand", [
+          mkItem("External Brand presence", { score: 6, note: "Not in top 20 on Google or AI search" }),
+          mkItem("#1 Resource for Repair", { score: 6, note: "Positioning" })
+        ]),
+        mkSub("Internal Brand", [
+          mkItem("Internal Brand", { score: 6, note: "No brand guide. Signage needs work" })
+        ]),
+        mkSub("Awards & Credentials", [
+          mkItem("Best of 2026", { score: 6 }),
+          mkItem("Diamond Certified", { score: 6 })
+        ])
+      ]),
+
+      mkPillar("PR", [
+        mkSub("Earned Media & Press", [
+          mkItem("PR Visibility", { score: 3, note: "20 years, low visibility" })
+        ]),
+        mkSub("Memberships", [
+          mkItem("Chamber", { score: 6 }),
+          mkItem("VSW", { score: 6 })
+        ]),
+        mkSub("Accreditations", [
+          mkItem("BBB", { score: 6 })
+        ]),
+        mkSub("Awards", [
+          mkItem("Buy Award", { score: 6 })
+        ])
+      ]),
+
+      mkPillar("Paid", [
+        mkSub("Lead Vendors", [
+          mkItem("Angi", { mode: "calculated", target: 3.0, actual: 0.9, direction: "higher", note: "Locked until Dec. Do not renew" }),
+          mkItem("Modernize/Quinn", { score: 2, note: "Paused. June 1 restart. 4-month test" }),
+          mkItem("Refract", { score: 3, note: "Managed exit July 1 2026. Cut $5K SEO done" })
+        ]),
+        mkSub("Paid Search & LSA", [
+          mkItem("Google LSA", { score: 3, note: "QFH owns accounts. Take over now" })
+        ]),
+        mkSub("Paid Directories", [
+          mkItem("Yelp Paid", { score: 6, note: "Linda driving reviews. Profile restructure needed" })
+        ]),
+        mkSub("Financing & Offers", [
+          mkItem("QF Lending", { score: 6 })
+        ]),
+        mkSub("Marketing Automation", [
+          mkItem("Zapier", { score: 6 })
+        ])
+      ], { weight: 3 }),
+
+      mkPillar("Organic", [
+        mkSub("Website", [
+          mkItem("Website", { score: 9, note: "Fully optimized. Best digital asset" })
+        ]),
+        mkSub("Blog & Content", [
+          mkItem("Blog", { score: 8, note: "2x/week. SEO and AI search optimized" })
+        ]),
+        mkSub("Newsletter", [
+          mkItem("Newsletter", { score: 8, note: "1x/week. Educational, drives website" })
+        ]),
+        mkSub("Search Optimization", [
+          mkItem("SEO/AEO/GEO", { score: 7 })
+        ]),
+        mkSub("Local Presence", [
+          mkItem("GBP", { score: 6, note: "Good state. Review system needed" }),
+          mkItem("Map Pack", { score: 5, note: "Day 30 of 90. Work-free guarantee" })
+        ]),
+        mkSub("Reviews", [
+          mkItem("Google Reviews", { score: 6 }),
+          mkItem("Yelp Reviews", { score: 6 })
+        ]),
+        mkSub("Core Social", [
+          mkItem("Organic Social", { score: 5, note: "1,217 pieces/month, all static. Video/carousel needed" })
+        ]),
+        mkSub("Emerging Platforms", [
+          mkItem("Additional Platforms", { score: 5, note: "Accounts open. Content TBD" })
+        ]),
+        mkSub("Forums & Communities", [
+          mkItem("Forums", { score: 5, note: "Vendor websites and forum list" })
+        ])
+      ], { weight: 2 }),
+
+      mkPillar("Traditional", [
+        mkSub("Print", [
+          mkItem("Print Audit", { score: 6, note: "Audit complete. Vendor consolidation in progress" }),
+          mkItem("Yard Signs", { score: 6, tags: ["Canvassing"] }),
+          mkItem("Door Hangers", { score: 6, tags: ["Canvassing"] })
+        ]),
+        mkSub("Direct Mail", [
+          mkItem("Mail Marketing", { score: 6, tags: ["Canvassing"] })
+        ]),
+        mkSub("Broadcast", [
+          mkItem("Radio", { score: 6 }),
+          mkItem("TV", { score: 6 })
+        ]),
+        mkSub("Out of Home", [
+          mkItem("Billboards", { score: 6 })
+        ])
+      ]),
+
+      mkPillar("Team", [
+        mkSub("Telemarketing", [
+          mkItem("Telemarketing Operation", { score: 9, note: "Kareem built best-in-class operation", tags: ["Telemarketing"] })
+        ]),
+        mkSub("Canvassing", [
+          mkItem("Canvassing Operation", { score: 7, note: "Proven system. Team growing", tags: ["Canvassing"] })
+        ]),
+        mkSub("Servicing", [
+          mkItem("Servicing", { score: 6, tags: ["Servicing"] })
+        ]),
+        mkSub("Install", [
+          mkItem("Install", { score: 6, tags: ["Install"] })
+        ]),
+        mkSub("Sales", [
+          mkItem("Sales", { score: 6, tags: ["Sales"] })
+        ])
+      ]),
+
+      mkPillar("Scott", [
+        mkSub("General", [
+          mkItem("Core Values", { score: 6 }),
+          mkItem("Company Video", { score: 6 }),
+          mkItem("Executive Visibility", { score: 6 })
+        ])
+      ], { freeform: true })
+    ]
+  };
+}
+
+/* ============================================================
+   Persistence
+   ============================================================ */
+let state = null;
+let currentView = "pillar"; // "pillar" | "dept"
+let editing = null;         // { itemId } or null for new
+let draftMode = "judged";
+let draftDir = "higher";
+let draftType = "ongoing";
+
+// ---- Google Drive / auth state ----
+let canEdit = false;        // true only if the signed-in user has edit rights on the Drive file
+let currentUser = null;     // { displayName, emailAddress }
+let accessToken = null;
+let tokenClient = null;
+let gapiReady = false, gisReady = false;
+
+// Backfill fields added in later versions so older saves/imports still work.
+function normalizeState(s) {
+  if (!Array.isArray(s.history)) s.history = [];
+  // Establish a stable display order ONCE via a per-pillar `order` field, seeded
+  // from PILLAR_ORDER by name. After that the order is positional, so renaming a
+  // pillar never moves it. The field persists and travels with export/import.
+  s.pillars.forEach((p, i) => {
+    if (typeof p.order !== "number") {
+      const idx = PILLAR_ORDER.indexOf(p.name);
+      p.order = idx < 0 ? PILLAR_ORDER.length + i : idx;
+    }
+  });
+  s.pillars.sort((a, b) => a.order - b.order);
+  for (const p of s.pillars) {
+    for (const sub of p.subSections) {
+      for (const it of sub.items) {
+        if (it.type !== "campaign" && it.type !== "ongoing") it.type = "ongoing";
+        if (it.status !== "completed") it.status = "active";
+        if (it.completionDate === undefined) it.completionDate = null;
+      }
+    }
+  }
+  return s;
+}
+
+/* ============================================================
+   Storage layer — single shared JSON file in Google Drive
+   (replaces localStorage). Last-write-wins.
+   ============================================================ */
+
+// Fire-and-forget save used by every edit handler. Editors only.
+function save() { saveToDrive(); }
+
+async function saveToDrive() {
+  if (!canEdit) return;                 // view-only users never write
+  if (!gapiReady || !accessToken) return;
+  state.meta = state.meta || {};
+  state.meta.lastSavedBy = currentUser ? (currentUser.displayName || currentUser.emailAddress) : "Unknown";
+  state.meta.lastSavedAt = new Date().toISOString();
+  setSaveStatus("Saving…");
+  try {
+    await gapi.client.request({
+      path: "/upload/drive/v3/files/" + DRIVE_FILE_ID,
+      method: "PATCH",
+      params: { uploadType: "media" },
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(state)
+    });
+    updateSavedIndicator(state.meta.lastSavedBy, state.meta.lastSavedAt);
+    setSaveStatus("Saved ✓");
+    setTimeout(() => setSaveStatus(""), 1600);
+  } catch (e) {
+    console.error("Drive save failed", e);
+    setSaveStatus("Save failed");
+    alert("Could not save to Google Drive. Your change is not shared yet — click Refresh and try again.\n\n" +
+          (e && e.result && e.result.error ? e.result.error.message : ""));
+  }
+}
+
+// Pull the latest copy of the shared file, recompute access, and render.
+async function refreshFromDrive() {
+  setSaveStatus("Loading…");
+  // 1) metadata: does this user have edit rights? + freshness
+  const meta = await gapi.client.drive.files.get({
+    fileId: DRIVE_FILE_ID,
+    fields: "name, capabilities(canEdit), modifiedTime, lastModifyingUser(displayName, emailAddress)"
+  });
+  canEdit = !!(meta.result.capabilities && meta.result.capabilities.canEdit);
+
+  // 2) file content
+  let parsed = null;
+  try {
+    const media = await gapi.client.drive.files.get({ fileId: DRIVE_FILE_ID, alt: "media" });
+    parsed = JSON.parse(media.body);
+  } catch (e) { parsed = null; }
+
+  if (!parsed || !Array.isArray(parsed.pillars)) {
+    // Empty / brand-new file: an editor initializes it with seed data; viewers must wait.
+    if (canEdit) {
+      state = normalizeState(seedState());
+      applyAccessMode();
+      render();
+      await saveToDrive();
+    } else {
+      throw new Error("The shared dashboard file has no data yet. Ask an editor to open it once to initialize it.");
+    }
+    return;
+  }
+
+  state = normalizeState(parsed);
+  applyAccessMode();
+  if (canEdit) maybeDailySnapshot();   // keep the trend building without manual exports
+  render();
+
+  // freshness: prefer the in-file stamp, fall back to Drive metadata
+  const by = (state.meta && state.meta.lastSavedBy) ||
+             (meta.result.lastModifyingUser && meta.result.lastModifyingUser.displayName) || "—";
+  const at = (state.meta && state.meta.lastSavedAt) || meta.result.modifiedTime;
+  updateSavedIndicator(by, at);
+  setSaveStatus("");
+}
+
+// Record at most one history snapshot per calendar day, on first load. Editors only.
+function maybeDailySnapshot() {
+  const today = new Date().toISOString().slice(0, 10);
+  const hist = state.history || [];
+  const last = hist.length ? hist[hist.length - 1] : null;
+  const lastDay = last ? String(last.date).slice(0, 10) : null;
+  if (lastDay === today) return false;
+  recordSnapshot();
+  saveToDrive();
+  return true;
+}
+
+/* ============================================================
+   Google Sign-In + access mode
+   ============================================================ */
+function isUnconfigured() {
+  return !GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.indexOf("PASTE_") === 0 ||
+         !DRIVE_FILE_ID || DRIVE_FILE_ID.indexOf("PASTE_") === 0;
+}
+
+// Called by the Google client libraries once they finish loading (script onload).
+function gapiLoaded() {
+  gapi.load("client", async () => {
+    await gapi.client.init({ discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"] });
+    gapiReady = true;
+  });
+}
+function gisLoaded() {
+  if (!isUnconfigured()) {
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: DRIVE_SCOPE,
+      callback: () => {}   // set per-request in handleSignIn
+    });
+  }
+  gisReady = true;
+}
+
+function handleSignIn() {
+  if (isUnconfigured()) {
+    setGateStatus("Not configured yet — open SETUP-GUIDE.md and paste your Client ID and Drive File ID into this file.");
+    return;
+  }
+  if (!gapiReady || !gisReady || !tokenClient) {
+    setGateStatus("Still loading Google… give it a second and click again.");
+    return;
+  }
+  tokenClient.callback = async (resp) => {
+    if (resp.error) { setGateStatus("Sign-in failed: " + resp.error); return; }
+    accessToken = resp.access_token;
+    gapi.client.setToken({ access_token: accessToken });
+    try {
+      await afterAuth();
+    } catch (e) {
+      console.error(e);
+      setGateStatus(e.message || "Could not load the dashboard from Drive.");
+    }
+  };
+  tokenClient.requestAccessToken({ prompt: accessToken ? "" : "consent" });
+}
+
+async function afterAuth() {
+  setGateStatus("Loading dashboard…");
+  const about = await gapi.client.drive.about.get({ fields: "user(displayName, emailAddress)" });
+  currentUser = about.result.user;
+  document.getElementById("acctName").textContent = currentUser.displayName || currentUser.emailAddress;
+  await refreshFromDrive();
+  showDashboard();
+  setGateStatus("");
+}
+
+function handleSignOut() {
+  if (accessToken && window.google && google.accounts && google.accounts.oauth2) {
+    google.accounts.oauth2.revoke(accessToken, () => {});
+  }
+  accessToken = null; currentUser = null; canEdit = false; state = null;
+  if (window.gapi && gapi.client) gapi.client.setToken(null);
+  document.body.classList.remove("readonly");
+  showAuthGate();
+  setGateStatus("Signed out.");
+}
+
+async function handleRefresh() {
+  if (!accessToken) return;
+  try { await refreshFromDrive(); }
+  catch (e) { alert("Refresh failed: " + (e.message || e)); }
+}
+
+function applyAccessMode() {
+  document.body.classList.toggle("readonly", !canEdit);
+  const role = document.getElementById("acctRole");
+  if (role) {
+    role.textContent = canEdit ? "Editor" : "View only";
+    role.className = "badge " + (canEdit ? "badge-edit" : "badge-view");
+  }
+}
+
+function showDashboard() {
+  document.getElementById("authGate").classList.add("hidden");
+  document.getElementById("account").classList.remove("hidden");
+}
+function showAuthGate() {
+  document.getElementById("authGate").classList.remove("hidden");
+  document.getElementById("account").classList.add("hidden");
+}
+function setGateStatus(msg) { const el = document.getElementById("gateStatus"); if (el) el.textContent = msg || ""; }
+function setSaveStatus(msg) { const el = document.getElementById("saveStatus"); if (el) el.textContent = msg || ""; }
+function updateSavedIndicator(by, at) {
+  const el = document.getElementById("lastSaved");
+  if (!el) return;
+  if (!at) { el.textContent = ""; return; }
+  const d = new Date(at);
+  const when = isNaN(d.getTime()) ? at
+    : d.toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  el.textContent = "Last saved by " + (by || "—") + " · " + when;
+}
+
+/* ============================================================
+   Rendering
+   ============================================================ */
+function fmtScore(s) { return (Math.round(s * 10) / 10).toString(); }
+
+function fmtUpdated(ts) {
+  if (!ts) return "";
+  const d = new Date(ts);
+  if (isNaN(d.getTime())) return "";
+  return "updated " + d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
+function scoreChip(score, opts) {
+  opts = opts || {};
+  const b = band(score);
+  const val = score === null ? "—" : fmtScore(score);
+  const denom = opts.denom === false ? "" : "<small>/" + (opts.outOf || 10) + "</small>";
+  return '<span class="scorechip tinted ' + b.cls + '">' + val + denom + '</span>';
+}
+
+function findLocation(itemId) {
+  for (const p of state.pillars) {
+    for (const s of p.subSections) {
+      const it = s.items.find(i => i.id === itemId);
+      if (it) return { pillar: p, sub: s, item: it };
+    }
+  }
+  return null;
+}
+
+function cardHTML(item, opts) {
+  opts = opts || {};
+  const s = itemScore(item);
+  const b = band(s);
+  const tags = (item.tags || []).map(t => '<span class="tag">' + escapeHtml(t) + '</span>').join("");
+  const from = opts.from ? '<div class="dept-from">' + escapeHtml(opts.from) + '</div>' : "";
+  const calcBadge = item.mode === "calculated"
+    ? '<span class="calcbadge">calc · ' + escapeHtml(String(item.actual)) + "/" + escapeHtml(String(item.target)) + ' ' + item.direction + '</span>'
+    : "";
+  return '' +
+    '<div class="card tinted ' + b.cls + '" data-id="' + item.id + '">' +
+      '<div class="top">' +
+        '<div class="name">' + escapeHtml(item.name) + '</div>' +
+        '<div class="score">' + s + '<small>/10</small></div>' +
+      '</div>' +
+      '<div class="statuslabel colored">' + b.label + '</div>' +
+      (item.note ? '<div class="note">' + escapeHtml(item.note) + '</div>' : '') +
+      (tags ? '<div class="tags">' + tags + '</div>' : '') +
+      '<div class="foot">' +
+        '<span class="owner">' + (item.owner ? escapeHtml(item.owner) : '') + '</span>' +
+        '<span class="updated">' + fmtUpdated(item.lastUpdated) + '</span>' +
+      '</div>' +
+      ((calcBadge || item.type === "campaign")
+        ? '<div class="tags">' + calcBadge + (item.type === "campaign" ? '<span class="type-badge">Campaign</span>' : '') + '</div>'
+        : '') +
+      from +
+    '</div>';
+}
+
+function renderPillarView() {
+  const root = document.getElementById("view");
+  let html = "";
+  for (const p of state.pillars) {
+    const ps = pillarScore(p);
+    const pb = band(ps);
+    html += '<section class="pillar" id="pillar-' + p.id + '">';
+    html += '<div class="pillar-head tinted ' + pb.cls + '" data-pillar="' + p.id + '">';
+    html += '<h2>' + escapeHtml(p.name) + (p.freeform ? ' <span class="weight">· freeform</span>' : '') +
+      ' <button class="pencil" data-edit-pillar="' + p.id + '" title="Rename pillar" aria-label="Rename pillar">✎</button></h2>';
+    html += '<span class="weight">weight <input type="number" step="0.1" min="0" value="' + p.weight + '" data-weight="' + p.id + '"' + (canEdit ? '' : ' disabled') + ' /></span>';
+    html += '<span class="statuslabel colored">' + pb.label + '</span>';
+    html += scoreChip(ps);
+    html += '</div>';
+
+    for (const sub of p.subSections) {
+      const ss = subScore(sub);
+      const sb = band(ss);
+      html += '<div class="subsection">';
+      html += '<div class="subsection-head" data-sub="' + sub.id + '">';
+      html += '<h3>' + escapeHtml(sub.name) +
+        ' <button class="pencil" data-edit-sub="' + sub.id + '" title="Rename sub-section" aria-label="Rename sub-section">✎</button></h3>';
+      html += '<span class="statuslabel colored ' + sb.cls + '">' + sb.label + '</span>';
+      html += scoreChip(ss);
+      html += '</div>';
+      const shown = activeItems(sub);
+      if (shown.length === 0) {
+        html += '<div class="empty">No active items in this sub-section.</div>';
+      } else {
+        html += '<div class="grid">';
+        for (const item of shown) html += cardHTML(item);
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+    html += '</section>';
+  }
+  root.innerHTML = html;
+}
+
+function renderDeptView() {
+  const root = document.getElementById("view");
+  // group items by tag
+  const groups = {}; // tag -> [{item, from}]
+  for (const p of state.pillars) {
+    for (const sub of p.subSections) {
+      for (const item of sub.items) {
+        if (!isActive(item)) continue;
+        for (const t of (item.tags || [])) {
+          if (!groups[t]) groups[t] = [];
+          groups[t].push({ item: item, from: p.name + " › " + sub.name });
+        }
+      }
+    }
+  }
+  const tags = Object.keys(groups).sort();
+  let html = "";
+  if (tags.length === 0) {
+    html = '<div class="empty">No tagged items yet. Add a tag to an item (e.g. "Canvassing") to surface it here.</div>';
+  }
+  for (const t of tags) {
+    const entries = groups[t];
+    const scores = entries.map(e => itemScore(e.item));
+    const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+    const b = band(avg);
+    html += '<section class="pillar">';
+    html += '<div class="pillar-head tinted ' + b.cls + '">';
+    html += '<h2>' + escapeHtml(t) + ' <span class="weight">· department view</span></h2>';
+    html += '<span class="statuslabel colored">' + b.label + '</span>';
+    html += scoreChip(avg);
+    html += '</div>';
+    html += '<div class="subsection"><div class="grid">';
+    for (const e of entries) html += cardHTML(e.item, { from: e.from });
+    html += '</div></div>';
+    html += '</section>';
+  }
+  root.innerHTML = html;
+}
+
+function fmtDay(ts) {
+  if (!ts) return "—";
+  const d = new Date(ts);
+  if (isNaN(d.getTime())) return "—";
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
+function archiveCardHTML(item) {
+  const s = itemScore(item);
+  const b = band(s);
+  return '' +
+    '<div class="card tinted archived ' + b.cls + '">' +
+      '<div class="top">' +
+        '<div class="name">' + escapeHtml(item.name) + '</div>' +
+        '<div class="score">' + s + '<small>/10</small></div>' +
+      '</div>' +
+      '<div class="statuslabel colored">' + b.label + ' · final</div>' +
+      '<div class="completed-on">Completed ' + fmtDay(item.completionDate) + '</div>' +
+      (item.note ? '<div class="note">' + escapeHtml(item.note) + '</div>' : '') +
+      '<div class="foot">' +
+        '<span class="owner">' + (item.owner ? escapeHtml(item.owner) : '') + '</span>' +
+        '<span class="type-badge">Campaign</span>' +
+      '</div>' +
+      '<button class="restore-btn" data-restore="' + item.id + '">Restore to Active</button>' +
+    '</div>';
+}
+
+function renderArchive() {
+  const root = document.getElementById("view");
+  let html = "";
+  let any = false;
+  for (const p of state.pillars) {           // same pillar order as the main board
+    const completed = [];
+    for (const sub of p.subSections) {
+      for (const it of sub.items) {
+        if (it.status === "completed") completed.push(it);
+      }
+    }
+    if (completed.length === 0) continue;
+    any = true;
+    // newest completion first within the pillar
+    completed.sort((a, b) => String(b.completionDate || "").localeCompare(String(a.completionDate || "")));
+    html += '<section class="pillar">';
+    html += '<div class="pillar-head" data-pillar="' + p.id + '">';
+    html += '<h2>' + escapeHtml(p.name) +
+      ' <button class="pencil" data-edit-pillar="' + p.id + '" title="Rename pillar" aria-label="Rename pillar">✎</button></h2>';
+    html += '<span class="weight">' + completed.length + ' completed</span>';
+    html += '</div>';
+    html += '<div class="subsection"><div class="grid">';
+    for (const it of completed) html += archiveCardHTML(it);
+    html += '</div></div>';
+    html += '</section>';
+  }
+  if (!any) {
+    html = '<div class="empty">No completed items yet. Open a Campaign item and choose “Mark Complete” to archive it here.</div>';
+  }
+  root.innerHTML = html;
+}
+
+function renderOverall() {
+  const o = overall100(state);
+  const big = document.getElementById("overallBig");
+  const status = document.getElementById("overallStatus");
+  const box = document.getElementById("overallBox");
+  if (o === null) {
+    big.innerHTML = '--<small>/100</small>';
+    status.textContent = "No data";
+    box.className = "overall-header b-none";
+  } else {
+    const b = band(o / 10);
+    big.innerHTML = o + '<small>/100</small>';
+    status.textContent = b.label;
+    box.className = "overall-header " + b.cls;
+  }
+}
+
+function renderStrip() {
+  // Uses the same pillarScore() values that feed overall100(), so the strip
+  // stays consistent with the headline 59/100 number.
+  const strip = document.getElementById("pillarStrip");
+  let html = "";
+  for (const p of state.pillars) {
+    const ps = pillarScore(p);
+    const b = band(ps);
+    const val = ps === null ? "—" : fmtScore(ps);
+    html += '' +
+      '<div class="strip-card tinted ' + b.cls + '" data-pillar="' + p.id + '">' +
+        '<div class="s-score">' + val + '<small>/10</small></div>' +
+        '<div class="s-meta">' +
+          '<div class="s-name">' + escapeHtml(p.name) + '</div>' +
+          '<div class="s-status statuslabel colored">' + b.label + '</div>' +
+        '</div>' +
+      '</div>';
+  }
+  strip.innerHTML = html;
+}
+
+/* ---- Charts (inline SVG, no libraries) ---- */
+function bandHex(key) {
+  const v = getComputedStyle(document.documentElement).getPropertyValue("--" + key).trim();
+  return v || "#5d6675";
+}
+function polar(cx, cy, r, deg) {
+  const a = deg * Math.PI / 180;
+  return [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+}
+function slicePath(cx, cy, r, a0, a1) {
+  const [x0, y0] = polar(cx, cy, r, a0);
+  const [x1, y1] = polar(cx, cy, r, a1);
+  const large = (a1 - a0) > 180 ? 1 : 0;
+  return "M " + cx + " " + cy + " L " + x0.toFixed(2) + " " + y0.toFixed(2) +
+         " A " + r + " " + r + " 0 " + large + " 1 " + x1.toFixed(2) + " " + y1.toFixed(2) + " Z";
+}
+
+function renderPie(container) {
+  const data = state.pillars.map(p => ({
+    name: p.name,
+    n: p.subSections.reduce((a, s) => a + activeItems(s).length, 0),
+    score: pillarScore(p)
+  }));
+  const total = data.reduce((a, c) => a + c.n, 0);
+  const totalEl = document.getElementById("pieTotal");
+  if (totalEl) totalEl.textContent = total ? "· " + total + " items" : "";
+  if (total === 0) { container.innerHTML = '<div class="chart-empty">No items yet.</div>'; return; }
+
+  const cx = 140, cy = 110, r = 74, hole = 40;
+  let ang = 0, paths = "", labels = "";
+  data.forEach(c => {
+    if (c.n === 0) return;
+    const span = c.n / total * 360;
+    const a0 = ang, a1 = ang + span;
+    const color = bandHex(band(c.score).key);
+    if (span >= 359.999) {
+      paths += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + color + '" stroke="var(--panel)" stroke-width="2"/>';
+    } else {
+      paths += '<path d="' + slicePath(cx, cy, r, a0, a1) + '" fill="' + color + '" stroke="var(--panel)" stroke-width="2"/>';
+    }
+    const mid = (a0 + a1) / 2;
+    const [lx, ly] = polar(cx, cy, r + 11, mid);
+    const anchor = lx >= cx ? "start" : "end";
+    labels += '<text x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="' + anchor +
+      '" dominant-baseline="middle" font-size="9.5" fill="var(--text)">' +
+      escapeHtml(c.name) + ' <tspan fill="var(--muted)">' + c.n + '</tspan></text>';
+    ang = a1;
+  });
+  // donut hole + center total
+  const center =
+    '<circle cx="' + cx + '" cy="' + cy + '" r="' + hole + '" fill="var(--panel)"/>' +
+    '<text x="' + cx + '" y="' + (cy - 2) + '" text-anchor="middle" font-size="22" font-weight="800" fill="var(--text)">' + total + '</text>' +
+    '<text x="' + cx + '" y="' + (cy + 13) + '" text-anchor="middle" font-size="9" fill="var(--muted)">items</text>';
+  container.innerHTML = '<svg viewBox="0 0 280 220" role="img" aria-label="Work distribution by pillar, sized by item count">' +
+    paths + center + labels + '</svg>';
+}
+
+function renderLineChart(container) {
+  const hist = Array.isArray(state.history) ? state.history : [];
+  if (hist.length < 2) {
+    container.innerHTML = '<div class="chart-empty"><div>Export to start tracking history.' +
+      (hist.length === 1 ? '<div style="font-size:11px;opacity:.7;margin-top:6px">1 snapshot saved — export again to plot the trend.</div>' : '') +
+      '</div></div>';
+    return;
+  }
+  const W = 360, H = 220, padL = 30, padR = 14, padT = 14, padB = 28;
+  const plotW = W - padL - padR, plotH = H - padT - padB, n = hist.length;
+  const X = i => padL + (i / (n - 1)) * plotW;
+  const Y = v => padT + (1 - v / 100) * plotH;
+
+  let grid = "";
+  [0, 25, 50, 75, 100].forEach(v => {
+    const yy = Y(v);
+    grid += '<line x1="' + padL + '" y1="' + yy.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + yy.toFixed(1) +
+            '" stroke="var(--line)" stroke-width="1"/>';
+    grid += '<text x="' + (padL - 6) + '" y="' + (yy + 3).toFixed(1) + '" text-anchor="end" font-size="9" fill="var(--muted)">' + v + '</text>';
+  });
+
+  const pts = hist.map((h, i) => [X(i), Y(h.overall)]);
+  const poly = pts.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+
+  let dots = "";
+  hist.forEach((h, i) => {
+    const c = bandHex(band(h.overall / 10).key);
+    dots += '<circle cx="' + pts[i][0].toFixed(1) + '" cy="' + pts[i][1].toFixed(1) +
+            '" r="3.5" fill="' + c + '" stroke="var(--panel)" stroke-width="1.5"/>';
+  });
+
+  const step = Math.max(1, Math.ceil(n / 6));
+  let xlabels = "";
+  hist.forEach((h, i) => {
+    if (i % step !== 0 && i !== n - 1) return;
+    const d = new Date(h.date);
+    const lbl = isNaN(d.getTime()) ? "" : (d.getMonth() + 1) + "/" + d.getDate();
+    xlabels += '<text x="' + pts[i][0].toFixed(1) + '" y="' + (H - padB + 14) +
+               '" text-anchor="middle" font-size="9" fill="var(--muted)">' + lbl + '</text>';
+  });
+
+  container.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Overall health score over time">' +
+    grid +
+    '<polyline points="' + poly + '" fill="none" stroke="#5b8def" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
+    dots + xlabels + '</svg>';
+}
+
+function renderCharts() {
+  const pie = document.getElementById("pieChart");
+  const line = document.getElementById("lineChart");
+  if (pie) renderPie(pie);
+  if (line) renderLineChart(line);
+}
+
+function render() {
+  renderOverall();
+  renderStrip();
+  renderCharts();
+  if (currentView === "pillar") renderPillarView();
+  else if (currentView === "dept") renderDeptView();
+  else renderArchive();
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+/* ============================================================
+   Editor
+   ============================================================ */
+function openEditor(itemId) {
+  if (!canEdit) return; // view-only users cannot open the editor
+  editing = itemId ? { itemId: itemId } : null;
+  const loc = itemId ? findLocation(itemId) : null;
+  document.getElementById("modalTitle").textContent = itemId ? "Edit Item" : "Add Item";
+  document.getElementById("btnDelete").classList.toggle("hidden", !itemId);
+
+  // populate pillar select
+  const pillarSel = document.getElementById("fPillar");
+  pillarSel.innerHTML = state.pillars.map(p => '<option value="' + p.id + '">' + escapeHtml(p.name) + '</option>').join("");
+
+  const item = loc ? loc.item : null;
+  const pillarId = loc ? loc.pillar.id : state.pillars[0].id;
+  pillarSel.value = pillarId;
+  populateSubs(pillarId, loc ? loc.sub.id : null);
+
+  document.getElementById("fName").value = item ? item.name : "";
+  document.getElementById("fOwner").value = item ? item.owner : "";
+  document.getElementById("fNote").value = item ? item.note : "";
+  document.getElementById("fTags").value = item ? (item.tags || []).join(", ") : "";
+  document.getElementById("fScore").value = item ? (item.mode === "judged" ? item.score : 6) : 6;
+  document.getElementById("fTarget").value = item ? item.target : "";
+  document.getElementById("fActual").value = item ? item.actual : "";
+
+  draftMode = item ? item.mode : "judged";
+  draftDir = item ? (item.direction || "higher") : "higher";
+  draftType = item ? (item.type || "ongoing") : "ongoing";
+  applyModeUI();
+  applyDirUI();
+  applyTypeUI();
+  updateCalcPreview();
+
+  document.getElementById("overlay").classList.add("open");
+  document.getElementById("fName").focus();
+}
+
+function applyTypeUI() {
+  document.getElementById("typeOngoing").classList.toggle("active", draftType === "ongoing");
+  document.getElementById("typeCampaign").classList.toggle("active", draftType === "campaign");
+  document.getElementById("typeHint").textContent = draftType === "campaign"
+    ? "Has a finish line — can be marked complete and archived."
+    : "Month-to-month tracker — stays on the active board, never completes.";
+  // Mark Complete is only meaningful for campaigns
+  document.getElementById("btnComplete").classList.toggle("hidden", draftType !== "campaign");
+}
+
+function populateSubs(pillarId, selectedId) {
+  const p = state.pillars.find(x => x.id === pillarId);
+  const subSel = document.getElementById("fSub");
+  subSel.innerHTML = (p ? p.subSections : []).map(s => '<option value="' + s.id + '">' + escapeHtml(s.name) + '</option>').join("");
+  if (selectedId) subSel.value = selectedId;
+}
+
+function applyModeUI() {
+  document.getElementById("modeJudged").classList.toggle("active", draftMode === "judged");
+  document.getElementById("modeCalc").classList.toggle("active", draftMode === "calculated");
+  document.getElementById("judgedBlock").classList.toggle("hidden", draftMode !== "judged");
+  document.getElementById("calcBlock").classList.toggle("hidden", draftMode !== "calculated");
+}
+function applyDirUI() {
+  document.getElementById("dirHigher").classList.toggle("active", draftDir === "higher");
+  document.getElementById("dirLower").classList.toggle("active", draftDir === "lower");
+}
+
+function updateCalcPreview() {
+  if (draftMode !== "calculated") return;
+  const t = Number(document.getElementById("fTarget").value);
+  const a = Number(document.getElementById("fActual").value);
+  const tmp = { mode: "calculated", target: t, actual: a, direction: draftDir };
+  const s = itemScore(tmp);
+  const b = band(s);
+  const chip = document.getElementById("calcPreview");
+  chip.className = "scorechip tinted " + b.cls;
+  chip.innerHTML = s + '<small>/10</small>';
+  let expl = "";
+  if (!t || !a) {
+    expl = "(zero guard → 1)";
+  } else {
+    const ratio = draftDir === "lower" ? (t / a) : (a / t);
+    expl = (draftDir === "lower" ? "target/actual = " + t + "/" + a : "actual/target = " + a + "/" + t) +
+           " = " + (Math.round(ratio * 100) / 100) + " → " + b.label;
+  }
+  document.getElementById("calcExpl").textContent = expl;
+}
+
+function closeEditor() {
+  document.getElementById("overlay").classList.remove("open");
+  editing = null;
+}
+
+function saveEditor() { persistFromEditor(false); }
+
+function markComplete() {
+  if (draftType !== "campaign") return; // only campaigns can complete
+  persistFromEditor(true);
+}
+
+function persistFromEditor(complete) {
+  if (!canEdit) return;
+  const name = document.getElementById("fName").value.trim();
+  if (!name) { alert("Name is required."); return; }
+  const pillarId = document.getElementById("fPillar").value;
+  const subId = document.getElementById("fSub").value;
+  const targetPillar = state.pillars.find(p => p.id === pillarId);
+  let targetSub = targetPillar ? targetPillar.subSections.find(s => s.id === subId) : null;
+  if (!targetSub) {
+    if (targetPillar && targetPillar.subSections.length) targetSub = targetPillar.subSections[0];
+    else { alert("That pillar has no sub-section to add to."); return; }
+  }
+
+  const tags = document.getElementById("fTags").value
+    .split(",").map(t => t.trim()).filter(Boolean);
+
+  let item;
+  let oldSub = null, oldIndex = -1;
+  if (editing) {
+    const loc = findLocation(editing.itemId);
+    item = loc.item;
+    oldSub = loc.sub;
+    oldIndex = loc.sub.items.findIndex(i => i.id === item.id);
+    // remove from old location
+    loc.sub.items = loc.sub.items.filter(i => i.id !== item.id);
+  } else {
+    item = { id: newId("item") };
+  }
+
+  item.name = name;
+  item.mode = draftMode;
+  item.type = draftType;
+  item.owner = document.getElementById("fOwner").value.trim();
+  item.note = document.getElementById("fNote").value.trim();
+  item.tags = tags;
+  if (complete) {
+    item.status = "completed";
+    item.completionDate = new Date().toISOString();
+  } else if (!item.status) {
+    item.status = "active";
+  }
+  if (draftMode === "judged") {
+    item.score = clamp(Number(document.getElementById("fScore").value) || 1, 1, 10);
+    item.target = item.target || 0;
+    item.actual = item.actual || 0;
+    item.direction = item.direction || "higher";
+  } else {
+    item.target = Number(document.getElementById("fTarget").value) || 0;
+    item.actual = Number(document.getElementById("fActual").value) || 0;
+    item.direction = draftDir;
+    item.score = item.score || 0;
+  }
+  item.lastUpdated = new Date().toISOString();
+
+  if (!editing) {
+    targetSub.items.unshift(item);              // new item renders first (newest-first)
+  } else if (targetSub === oldSub && oldIndex >= 0) {
+    targetSub.items.splice(oldIndex, 0, item);  // edited in place: keep its existing order
+  } else {
+    targetSub.items.unshift(item);              // moved to another sub-section: treat as newest
+  }
+  save();
+  closeEditor();
+  render();
+}
+
+function deleteItem() {
+  if (!canEdit) return;
+  if (!editing) return;
+  if (!confirm("Delete this item? This cannot be undone.")) return;
+  const loc = findLocation(editing.itemId);
+  if (loc) loc.sub.items = loc.sub.items.filter(i => i.id !== editing.itemId);
+  save();
+  closeEditor();
+  render();
+}
+
+function restoreItem(id) {
+  if (!canEdit) return;
+  const loc = findLocation(id);
+  if (loc) {
+    loc.item.status = "active";
+    loc.item.completionDate = null;
+    loc.item.lastUpdated = new Date().toISOString();
+  }
+  save();
+  render();
+}
+
+function findSub(id) {
+  for (const p of state.pillars) {
+    const s = p.subSections.find(x => x.id === id);
+    if (s) return s;
+  }
+  return null;
+}
+
+// Inline rename for a pillar or sub-section title. Only the name changes;
+// items, scores, and rollups are untouched. New name persists + re-renders everywhere.
+function beginRename(kind, id, titleEl) {
+  if (!canEdit) return;
+  const obj = kind === "pillar" ? state.pillars.find(p => p.id === id) : findSub(id);
+  if (!obj || !titleEl || titleEl.querySelector(".title-edit")) return;
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "title-edit";
+  input.value = obj.name;
+  titleEl.innerHTML = "";
+  titleEl.appendChild(input);
+  input.focus();
+  input.select();
+  let done = false;
+  const finish = (commit) => {
+    if (done) return;
+    done = true;
+    if (commit) {
+      const v = input.value.trim();
+      if (v && v !== obj.name) { obj.name = v; save(); }
+    }
+    render();
+  };
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); finish(true); }
+    else if (e.key === "Escape") { e.preventDefault(); finish(false); }
+  });
+  input.addEventListener("blur", () => finish(true));
+}
+
+/* ============================================================
+   Export / Import / Reset
+   ============================================================ */
+function recordSnapshot() {
+  const o = overall100(state);
+  if (o === null) return; // nothing scored yet
+  if (!Array.isArray(state.history)) state.history = [];
+  state.history.push({
+    date: new Date().toISOString(),
+    overall: o,
+    pillars: state.pillars.map(p => ({ name: p.name, score: pillarScore(p) }))
+  });
+}
+
+function exportJSON() {
+  // Export is a manual backup and works for everyone (incl. view-only).
+  // Editors also stamp a fresh snapshot into the shared file as part of the export.
+  if (canEdit) {
+    recordSnapshot();
+    save();
+    render();
+  }
+  const data = JSON.stringify(state, null, 2);
+  const blob = new Blob([data], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const d = new Date();
+  const stamp = d.getFullYear() + "-" +
+    String(d.getMonth() + 1).padStart(2, "0") + "-" +
+    String(d.getDate()).padStart(2, "0");
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "marketing-health-" + stamp + ".json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function importJSON(file) {
+  if (!canEdit) return;
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    let parsed;
+    try { parsed = JSON.parse(e.target.result); }
+    catch (err) { alert("That file is not valid JSON."); return; }
+    if (!parsed || !Array.isArray(parsed.pillars)) {
+      alert("That JSON does not look like a dashboard export (missing 'pillars').");
+      return;
+    }
+    if (!confirm("Import will replace all current data with the contents of this file. Continue?")) return;
+    state = normalizeState(parsed);
+    save();
+    render();
+    alert("Import complete.");
+  };
+  reader.readAsText(file);
+}
+
+function resetState() {
+  if (!canEdit) return;
+  if (!confirm("Reset to the seeded starting data? All current changes will be lost.")) return;
+  state = normalizeState(seedState());
+  save();
+  render();
+}
+
+/* ============================================================
+   Wiring
+   ============================================================ */
+function wire() {
+  // auth / account controls
+  document.getElementById("btnSignIn").addEventListener("click", handleSignIn);
+  document.getElementById("btnSignout").addEventListener("click", handleSignOut);
+  document.getElementById("btnRefresh").addEventListener("click", handleRefresh);
+
+  document.getElementById("btnAdd").addEventListener("click", () => openEditor(null));
+  document.getElementById("btnExport").addEventListener("click", exportJSON);
+  document.getElementById("btnReset").addEventListener("click", resetState);
+  document.getElementById("btnImport").addEventListener("click", () => document.getElementById("importFile").click());
+  document.getElementById("importFile").addEventListener("change", function () {
+    if (this.files && this.files[0]) importJSON(this.files[0]);
+    this.value = "";
+  });
+
+  document.getElementById("viewPillar").addEventListener("click", () => setView("pillar"));
+  document.getElementById("viewDept").addEventListener("click", () => setView("dept"));
+  document.getElementById("viewArchive").addEventListener("click", () => setView("archive"));
+
+  // summary-strip click -> smooth-scroll to that pillar's full section
+  document.getElementById("pillarStrip").addEventListener("click", function (e) {
+    const card = e.target.closest(".strip-card");
+    if (!card || !card.dataset.pillar) return;
+    const id = card.dataset.pillar;
+    if (currentView !== "pillar") setView("pillar"); // detail sections only exist in pillar view
+    const sec = document.getElementById("pillar-" + id);
+    if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  // card clicks (delegated): rename pencils, restore button, otherwise open the editor
+  document.getElementById("view").addEventListener("click", function (e) {
+    const ep = e.target.closest("[data-edit-pillar]");
+    if (ep) { const h = ep.closest(".pillar-head"); beginRename("pillar", ep.getAttribute("data-edit-pillar"), h.querySelector("h2")); return; }
+    const es = e.target.closest("[data-edit-sub]");
+    if (es) { const h = es.closest(".subsection-head"); beginRename("sub", es.getAttribute("data-edit-sub"), h.querySelector("h3")); return; }
+    const rb = e.target.closest("[data-restore]");
+    if (rb) { restoreItem(rb.dataset.restore); return; }
+    const card = e.target.closest(".card");
+    if (card && card.dataset.id) openEditor(card.dataset.id);
+  });
+
+  // double-click a pillar/sub-section title to rename it inline
+  document.getElementById("view").addEventListener("dblclick", function (e) {
+    const h2 = e.target.closest(".pillar-head h2");
+    if (h2) { const head = h2.closest(".pillar-head"); const id = head.getAttribute("data-pillar"); if (id) beginRename("pillar", id, h2); return; }
+    const h3 = e.target.closest(".subsection-head h3");
+    if (h3) { const head = h3.closest(".subsection-head"); const id = head.getAttribute("data-sub"); if (id) beginRename("sub", id, h3); }
+  });
+  // weight edits (delegated)
+  document.getElementById("view").addEventListener("change", function (e) {
+    if (!canEdit) return;
+    const w = e.target.getAttribute && e.target.getAttribute("data-weight");
+    if (w) {
+      const p = state.pillars.find(x => x.id === w);
+      if (p) { p.weight = Number(e.target.value) || 0; save(); render(); }
+    }
+  });
+
+  // editor controls
+  document.getElementById("btnCancel").addEventListener("click", closeEditor);
+  document.getElementById("btnSave").addEventListener("click", saveEditor);
+  document.getElementById("btnDelete").addEventListener("click", deleteItem);
+  document.getElementById("btnComplete").addEventListener("click", markComplete);
+  document.getElementById("typeOngoing").addEventListener("click", () => { draftType = "ongoing"; applyTypeUI(); });
+  document.getElementById("typeCampaign").addEventListener("click", () => { draftType = "campaign"; applyTypeUI(); });
+  document.getElementById("overlay").addEventListener("click", function (e) {
+    if (e.target === this) closeEditor();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && document.getElementById("overlay").classList.contains("open")) closeEditor();
+  });
+
+  document.getElementById("modeJudged").addEventListener("click", () => { draftMode = "judged"; applyModeUI(); });
+  document.getElementById("modeCalc").addEventListener("click", () => { draftMode = "calculated"; applyModeUI(); updateCalcPreview(); });
+  document.getElementById("dirHigher").addEventListener("click", () => { draftDir = "higher"; applyDirUI(); updateCalcPreview(); });
+  document.getElementById("dirLower").addEventListener("click", () => { draftDir = "lower"; applyDirUI(); updateCalcPreview(); });
+  document.getElementById("fTarget").addEventListener("input", updateCalcPreview);
+  document.getElementById("fActual").addEventListener("input", updateCalcPreview);
+  document.getElementById("fPillar").addEventListener("change", function () { populateSubs(this.value, null); });
+}
+
+function setView(v) {
+  currentView = v;
+  document.getElementById("viewPillar").classList.toggle("active", v === "pillar");
+  document.getElementById("viewDept").classList.toggle("active", v === "dept");
+  document.getElementById("viewArchive").classList.toggle("active", v === "archive");
+  render();
+}
+
+/* ============================================================
+   Boot — wire UI, then wait for Google Sign-In before loading data
+   ============================================================ */
+wire();
+showAuthGate();
+if (isUnconfigured()) {
+  setGateStatus("Setup needed — open SETUP-GUIDE.md and paste your Client ID and Drive File ID near the top of this file.");
+}
+</script>
+
+<!-- Google client libraries (load AFTER the app script so the onload hooks exist) -->
+<script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+<script src="https://accounts.google.com/gsi/client" onload="gisLoaded()" async defer></script>
+</body>
+</html>
