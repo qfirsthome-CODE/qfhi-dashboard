@@ -354,11 +354,117 @@
   .badge-edit { color: var(--strong); border-color: var(--strong); background: var(--strong-tint); }
   .badge-view { color: var(--muted); }
 
+  /* ---------- v2: tabs, search, containers ---------- */
+  .tabbar { display: flex; gap: 4px; padding: 0 24px; border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 18; overflow-x: auto; }
+  .tabbar .tab { border: none; background: transparent; border-radius: 0; padding: 13px 18px; font-size: 14px; font-weight: 700; color: var(--muted); border-bottom: 2px solid transparent; }
+  .tabbar .tab:hover { color: var(--text); background: transparent; }
+  .tabbar .tab.active { color: var(--text); border-bottom-color: #2a6df0; }
+
+  .searchbar { max-width: 1500px; margin: 0 auto; padding: 12px 24px 0; display: flex; gap: 8px; align-items: center; }
+  .searchbar input { flex: 1; font: inherit; font-size: 14px; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; }
+  button.ghost { background: transparent; border: 1px solid var(--line); }
+
+  .board-msg { max-width: 620px; margin: 60px auto; text-align: center; color: var(--muted); }
+  .board-msg h2 { color: var(--text); font-size: 18px; margin: 0 0 10px; }
+  .board-msg p { font-size: 14px; line-height: 1.6; margin: 0 0 18px; }
+
+  /* header inline controls (delete / reorder / add-sub) */
+  .hdr-ctl { display: inline-flex; gap: 4px; margin-left: 8px; }
+  .ctl { font-size: 12px; font-weight: 600; padding: 4px 8px; border: 1px solid var(--line); background: var(--panel-2); border-radius: 7px; color: var(--muted); }
+  .ctl:hover { color: var(--text); border-color: #3a4658; }
+  .ctl.danger-ctl:hover { border-color: var(--critical); color: #ffd7d8; }
+  .hint-inline { font-weight: 500; font-size: 11px; color: var(--faint); }
+
+  /* Todo view */
+  .todo-list { display: flex; flex-direction: column; gap: 6px; }
+  .todo-row { display: grid; grid-template-columns: 1fr 78px 78px 120px 120px; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); cursor: pointer; }
+  .todo-row:hover { border-color: #3a4658; }
+  .todo-headrow { cursor: default; background: transparent; border-color: transparent; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .4px; padding-bottom: 2px; }
+  .todo-name { font-weight: 700; font-size: 14px; }
+  .todo-loc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .todo-num { text-align: center; border-radius: 8px; padding: 5px 4px; border: 1px solid transparent; }
+  .todo-num.tinted { background: var(--t); border-color: var(--c); }
+  .todo-num .tn { display: block; font-weight: 800; font-size: 18px; color: var(--c); }
+  .todo-num .tl { display: block; font-size: 9px; text-transform: uppercase; letter-spacing: .3px; color: var(--muted); }
+  .todo-owner { font-size: 13px; }
+  .todo-stale .stale { color: var(--atrisk); font-size: 11.5px; }
+  .todo-stale .fresh { color: var(--faint); font-size: 11.5px; }
+  .search-head { color: var(--muted); font-size: 13px; margin: 4px 2px 14px; }
+
+  /* Master tab */
+  #masterView { max-width: 1500px; margin: 0 auto; padding: 4px 0 40px; }
+  .master-hint { color: var(--muted); font-size: 12px; }
+  .master-hint code { background: rgba(255,255,255,.06); padding: 1px 5px; border-radius: 5px; }
+  .master-health { text-align: center; padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); margin-bottom: 16px; }
+  .master-health .overall-row { justify-content: center; }
+  .master-health .mh-big { font-size: 58px; color: var(--c, var(--text)); }
+  .master-health .status-pill { background: var(--t); color: var(--c); }
+  .mh-note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+  .dept-breakouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .dept-card { border: 1px solid var(--line); border-left: 5px solid var(--c); border-radius: 12px; padding: 14px; background: var(--t); cursor: pointer; }
+  .dept-card:hover { transform: translateY(-2px); }
+  .dc-top { display: flex; justify-content: space-between; align-items: center; }
+  .dc-name { font-weight: 700; font-size: 15px; }
+  .dc-status { margin-top: 6px; }
+  .dc-meta { font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+  .dc-weight { font-size: 11px; color: var(--muted); margin-top: 8px; }
+  .dc-weight input { width: 54px; font: inherit; font-size: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; color: var(--text); padding: 3px 6px; }
+  .master-card { border: 1px solid var(--line); border-radius: 14px; background: var(--panel); padding: 16px; margin-bottom: 16px; }
+  .master-card h3 { margin: 0 0 10px; font-size: 14px; }
+  .section-sep { margin: 26px 0 6px; border-top: 1px solid var(--line); text-align: center; }
+  .section-sep span { position: relative; top: -11px; background: var(--bg); padding: 0 14px; font-size: 12px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--muted); }
+  .lp-note { color: var(--muted); font-size: 12.5px; margin: 0 2px 14px; line-height: 1.5; }
+
+  /* LP tables */
+  .lp-quarterbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .lp-qmeta { font-size: 13px; color: var(--text); }
+  .lp-qmeta .wr { color: var(--muted); font-size: 12px; }
+  .lp-tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 14px; }
+  table.lp-table, table.entry-table, table.goal-table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  .lp-table th, .lp-table td, .entry-table th, .entry-table td, .goal-table th, .goal-table td { padding: 8px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--line); }
+  .lp-table th, .entry-table th, .goal-table th { color: var(--muted); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .3px; background: var(--panel-2); position: sticky; top: 0; }
+  .lp-table td.lp-deptname, .entry-table td.lp-deptname, .goal-table td.lp-deptname { text-align: left; font-weight: 700; }
+  .lp-table tr.lp-total td, .goal-table tr.lp-total td { font-weight: 800; background: rgba(255,255,255,.03); border-top: 2px solid var(--line); }
+  .mini { width: 66px; font: inherit; font-size: 12px; text-align: right; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+  .mini.wide { width: 150px; text-align: left; }
+
+  /* Goals */
+  .lp-goals-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 4px; }
+  .goalcard { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); padding: 14px; }
+  .goalcard h4 { margin: 0 0 10px; font-size: 13.5px; }
+  .goalsub { font-weight: 500; font-size: 11px; color: var(--faint); }
+  .goal-table td.pos { color: var(--strong); font-weight: 700; }
+  .goal-table td.neg { color: var(--critical); font-weight: 700; }
+  .goal-table .barrow td { padding-top: 0; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+  .pass { color: var(--strong); font-weight: 800; }
+  .fail { color: var(--critical); font-weight: 800; }
+  .goal-table .muted, .lp-qmeta .muted { color: var(--muted); }
+  .pbar { position: relative; height: 8px; background: var(--bg); border: 1px solid var(--line); border-radius: 5px; overflow: visible; }
+  .pbar-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #5b8def; border-radius: 5px; }
+  .pbar-mark { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--strong); }
+  .pbar-mark.stretch { background: var(--atrisk); }
+  .lp-goalnote { color: var(--muted); font-size: 12px; margin: 10px 2px 18px; line-height: 1.5; }
+
+  /* Weekly entry + monthly rollup */
+  .lp-entry, .lp-monthly { border-top: 1px solid var(--line); padding-top: 16px; margin-top: 12px; }
+  .lp-entry-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .lp-entry-head h4, .lp-monthly h4 { margin: 0; font-size: 13.5px; }
+  .week-block { margin-bottom: 14px; }
+  .week-top { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .week-top input[type=date] { font: inherit; font-size: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; color: var(--text); padding: 4px 6px; }
+  .month-block { margin-bottom: 14px; }
+  .month-label { font-weight: 700; font-size: 12.5px; margin-bottom: 6px; color: var(--text); }
+
+  @media (max-width: 720px) { .lp-goals-wrap { grid-template-columns: 1fr; } }
+
   /* Read-only users: remove every editing affordance */
   body.readonly #btnAdd,
+  body.readonly #btnAddPillar,
+  body.readonly #btnAddSub,
   body.readonly #btnImport,
   body.readonly #btnReset,
   body.readonly .pencil,
+  body.readonly .hdr-ctl,
   body.readonly .restore-btn { display: none !important; }
   body.readonly .weight input { pointer-events: none; opacity: .5; }
 
@@ -397,44 +503,70 @@
   </div>
 </div>
 
-<div class="toolbar">
-  <button class="primary" id="btnAdd">+ Add Item</button>
-  <button id="btnExport">Export JSON</button>
-  <button id="btnImport">Import JSON</button>
-  <button class="danger" id="btnReset">Reset</button>
-  <input type="file" id="importFile" accept="application/json,.json" class="hidden" />
-  <div class="viewtoggle">
-    <button id="viewPillar" class="active">By Pillar</button>
-    <button id="viewDept">By Department</button>
-    <button id="viewArchive">Archive</button>
-  </div>
+<!-- Tab bar (Master / department tabs) -->
+<div class="tabbar" id="tabBar"></div>
+
+<!-- Global search -->
+<div class="searchbar" id="searchBar">
+  <input type="text" id="searchInput" placeholder="Search items — name, note, owner, tag…" autocomplete="off" />
+  <button id="searchClear" class="ghost hidden" title="Clear search">✕</button>
 </div>
 
-<div class="strip-wrap">
-  <div class="overall-header" id="overallBox">
-    <div class="overall-label">Overall Marketing Health</div>
-    <div class="overall-row">
-      <div class="big" id="overallBig">--<small>/100</small></div>
-      <div class="status-pill colored" id="overallStatus">—</div>
+<!-- ============ Department board container ============ -->
+<div id="deptContainer">
+  <div class="toolbar" id="deptToolbar">
+    <span id="deptToolbarExtras">
+      <button class="primary" id="btnAdd">+ Add Item</button>
+      <button id="btnAddPillar">+ Add Pillar</button>
+      <button id="btnAddSub">+ Add Sub-section</button>
+    </span>
+    <button id="btnExport">Export JSON</button>
+    <button id="btnImport">Import JSON</button>
+    <button class="danger" id="btnReset">Reset</button>
+    <input type="file" id="importFile" accept="application/json,.json" class="hidden" />
+    <div class="viewtoggle">
+      <button id="viewPillar" class="active">By Pillar</button>
+      <button id="viewDept">By Department</button>
+      <button id="viewTodo">Todo</button>
+      <button id="viewArchive">Archive</button>
     </div>
   </div>
-  <div class="pillar-strip" id="pillarStrip"></div>
-</div>
 
-<div class="charts-section">
-  <div class="charts-grid">
-    <div class="chart-card">
-      <h3>Work Distribution <span class="chart-sub" id="pieTotal"></span></h3>
-      <div class="chart-body" id="pieChart"></div>
+  <div class="strip-wrap" id="stripWrap">
+    <div class="overall-header" id="overallBox">
+      <div class="overall-label">Department Health</div>
+      <div class="overall-row">
+        <div class="big" id="overallBig">--<small>/100</small></div>
+        <div class="status-pill colored" id="overallStatus">—</div>
+      </div>
     </div>
-    <div class="chart-card">
-      <h3>Overall Health Over Time</h3>
-      <div class="chart-body" id="lineChart"></div>
+    <div class="pillar-strip" id="pillarStrip"></div>
+  </div>
+
+  <div class="charts-section" id="chartsRow">
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Work Distribution <span class="chart-sub" id="pieTotal"></span></h3>
+        <div class="chart-body" id="pieChart"></div>
+      </div>
+      <div class="chart-card">
+        <h3>Overall Health Over Time</h3>
+        <div class="chart-body" id="lineChart"></div>
+      </div>
     </div>
   </div>
+
+  <main id="view"></main>
 </div>
 
-<main id="view"></main>
+<!-- ============ Master container ============ -->
+<div id="masterContainer" class="hidden">
+  <div class="toolbar">
+    <button id="btnExportMaster">Export All JSON</button>
+    <span class="master-hint">Master reads all four boards and writes only <code>master.json</code></span>
+  </div>
+  <main id="masterView"></main>
+</div>
 
 <!-- Editor modal -->
 <div class="overlay" id="overlay">
@@ -505,6 +637,11 @@
     </div>
 
     <div class="field">
+      <label>Priority (0–10) <span class="hint-inline">how urgent — independent of health</span></label>
+      <input type="number" id="fPriority" min="0" max="10" step="1" />
+    </div>
+
+    <div class="field">
       <label>Owner</label>
       <input type="text" id="fOwner" placeholder="Owner name" />
     </div>
@@ -533,14 +670,29 @@
 "use strict";
 
 /* ============================================================
-   ⚙️  SETUP — fill these two values in (see SETUP-GUIDE.md)
+   ⚙️  SETUP — fill these values in (see SETUP-GUIDE.md)
    ------------------------------------------------------------
    GOOGLE_CLIENT_ID : the OAuth 2.0 Web Client ID from Google Cloud
-   DRIVE_FILE_ID    : the ID of the shared dashboard JSON file in Drive
-                      (the long string in the file's share/URL link)
+   DRIVE_FILES      : one Drive JSON file ID per board. v2 uses FOUR
+                      separate files so departments never overwrite
+                      each other. `digital` is your existing v1 file.
    ============================================================ */
 const GOOGLE_CLIENT_ID = "1049730454759-b05hu99lm4qehtrnh8p47d1tp408boid.apps.googleusercontent.com";
-const DRIVE_FILE_ID    = "13GbgOFejECehhRZz8kkjyaLlGNZl5S4Y";
+
+const DRIVE_FILES = {
+  digital:       "13GbgOFejECehhRZz8kkjyaLlGNZl5S4Y",   // existing v1 file → Digital Marketing
+  telemarketing: "1gGXGb0r7qNWT58_547gQqj38y-UeCsg6",
+  canvassing:    "1i0_1LYKCHalQYDE_nH9lDpjg7NFZw1oh",
+  master:        "1RwYyR_LAZ9J97brbfNmlbrJ3DK5oNdDj"
+};
+
+// The three department boards (Master is handled separately).
+const DEPTS = [
+  { key: "digital",       label: "Digital Marketing" },
+  { key: "telemarketing", label: "Telemarketing" },
+  { key: "canvassing",    label: "Canvassing" }
+];
+const DEPT_LABEL = { digital: "Digital Marketing", telemarketing: "Telemarketing", canvassing: "Canvassing" };
 
 // Drive read/write of files the signed-in user can already access.
 // In OAuth "Testing" mode this works for listed Test Users with no review.
@@ -617,6 +769,28 @@ function overall100(state) {
   return Math.round(wavg * 10);
 }
 
+// A department's overall health on a 0–10 scale, or null if it has no scored items.
+function deptScore(key) {
+  const b = boards[key];
+  if (!b || !b.state || (b.access !== "edit" && b.access !== "view")) return null;
+  const o = overall100(b.state);
+  return o === null ? null : o / 10;
+}
+
+// Combined marketing health /100, weighted by master weights; empty depts excluded (not zero).
+function combinedHealth() {
+  const w = (masterBoard && masterBoard.data && masterBoard.data.weights) || { digital: 1, telemarketing: 1, canvassing: 1 };
+  let sum = 0, wsum = 0;
+  DEPTS.forEach(d => {
+    const s = deptScore(d.key);
+    if (s === null) return;               // No data → excluded from the blend
+    const wt = (typeof w[d.key] === "number") ? w[d.key] : 1;
+    sum += s * wt; wsum += wt;
+  });
+  if (wsum === 0) return null;
+  return Math.round((sum / wsum) * 10);
+}
+
 /* ============================================================
    Seed data
    ============================================================ */
@@ -636,6 +810,8 @@ function mkItem(name, opts) {
     type: opts.type || "ongoing",   // "ongoing" | "campaign"
     status: "active",               // "active" | "completed"
     completionDate: null,
+    priority: (opts.priority != null ? opts.priority : 0),   // 0–10, independent of health
+    priorityUpdated: null,
     lastUpdated: SEED_DATE
   };
 }
@@ -789,19 +965,27 @@ function seedState() {
 /* ============================================================
    Persistence
    ============================================================ */
-let state = null;
-let currentView = "pillar"; // "pillar" | "dept"
+let state = null;           // active DEPARTMENT board state (points at boards[activeTab].state)
+let currentView = "pillar"; // "pillar" | "dept" | "todo" | "archive"
 let editing = null;         // { itemId } or null for new
 let draftMode = "judged";
 let draftDir = "higher";
 let draftType = "ongoing";
 
+// ---- v2 multi-board state ----
+let boards = {};            // key -> { fileId, state, access, canEditFile }
+let masterBoard = null;     // { fileId, data, access, canEditFile }
+let activeTab = "master";   // "master" | "digital" | "telemarketing" | "canvassing"
+let searchQuery = "";
+
 // ---- Google Drive / auth state ----
-let canEdit = false;        // true only if the signed-in user has edit rights on the Drive file
+let canEdit = false;        // edit rights on the ACTIVE tab's file
 let currentUser = null;     // { displayName, emailAddress }
 let accessToken = null;
 let tokenClient = null;
 let gapiReady = false, gisReady = false;
+
+function emptyBoardState() { return { version: 2, history: [], pillars: [], meta: {} }; }
 
 // Backfill fields added in later versions so older saves/imports still work.
 function normalizeState(s) {
@@ -822,6 +1006,8 @@ function normalizeState(s) {
         if (it.type !== "campaign" && it.type !== "ongoing") it.type = "ongoing";
         if (it.status !== "completed") it.status = "active";
         if (it.completionDate === undefined) it.completionDate = null;
+        if (typeof it.priority !== "number") it.priority = 0;
+        if (it.priorityUpdated === undefined) it.priorityUpdated = null;
       }
     }
   }
@@ -829,83 +1015,180 @@ function normalizeState(s) {
 }
 
 /* ============================================================
-   Storage layer — single shared JSON file in Google Drive
-   (replaces localStorage). Last-write-wins.
+   Storage layer — one shared JSON file PER BOARD in Google Drive.
+   Department tabs read/write only their own file; Master reads all
+   four and writes only master.json. Last-write-wins per file.
    ============================================================ */
+function userName() { return currentUser ? (currentUser.displayName || currentUser.emailAddress) : "Unknown"; }
 
-// Fire-and-forget save used by every edit handler. Editors only.
-function save() { saveToDrive(); }
+async function driveMeta(fileId) {
+  const r = await gapi.client.drive.files.get({
+    fileId: fileId,
+    fields: "name, capabilities(canEdit), modifiedTime, lastModifyingUser(displayName, emailAddress)"
+  });
+  return r.result;
+}
+async function driveContent(fileId) {
+  try {
+    const r = await gapi.client.drive.files.get({ fileId: fileId, alt: "media" });
+    return JSON.parse(r.body);
+  } catch (e) { return null; }
+}
+async function driveWrite(fileId, bodyStr) {
+  await gapi.client.request({
+    path: "/upload/drive/v3/files/" + fileId,
+    method: "PATCH",
+    params: { uploadType: "media" },
+    headers: { "Content-Type": "application/json" },
+    body: bodyStr
+  });
+}
+function isPlaceholder(id) { return !id || id.indexOf("PASTE_") === 0; }
 
-async function saveToDrive() {
-  if (!canEdit) return;                 // view-only users never write
-  if (!gapiReady || !accessToken) return;
-  state.meta = state.meta || {};
-  state.meta.lastSavedBy = currentUser ? (currentUser.displayName || currentUser.emailAddress) : "Unknown";
-  state.meta.lastSavedAt = new Date().toISOString();
+/* ---- Master (master.json) data model ---- */
+function emptyEntries() { return { raw:0, set:0, issue:0, demo:0, sold:0, grossSale:0, netClose:0, netSale:0 }; }
+function newQuarter(label) {
+  return {
+    id: label || "Q",
+    label: label || "Current Quarter",
+    startDate: null, endDate: null,
+    weeks: [],
+    demoGoals: { digital: 0, telemarketing: 0, canvassing: 0 },
+    demoBenchmarks: { digital: null, telemarketing: null, canvassing: null }
+  };
+}
+function emptyMaster() {
+  return {
+    version: 2,
+    weights: { digital: 1, telemarketing: 1, canvassing: 1 },
+    lp: { quarter: newQuarter("Current Quarter"), archive: [] },
+    history: [],
+    meta: {}
+  };
+}
+function normalizeMaster(m) {
+  if (!m || typeof m !== "object") m = {};
+  if (!m.weights) m.weights = { digital: 1, telemarketing: 1, canvassing: 1 };
+  DEPTS.forEach(d => { if (typeof m.weights[d.key] !== "number") m.weights[d.key] = 1; });
+  if (!m.lp) m.lp = { quarter: newQuarter("Current Quarter"), archive: [] };
+  if (!m.lp.quarter) m.lp.quarter = newQuarter("Current Quarter");
+  if (!Array.isArray(m.lp.archive)) m.lp.archive = [];
+  const q = m.lp.quarter;
+  if (!Array.isArray(q.weeks)) q.weeks = [];
+  if (!q.demoGoals) q.demoGoals = { digital: 0, telemarketing: 0, canvassing: 0 };
+  if (!q.demoBenchmarks) q.demoBenchmarks = { digital: null, telemarketing: null, canvassing: null };
+  q.weeks.forEach(w => {
+    w.entries = w.entries || {};
+    DEPTS.forEach(d => { w.entries[d.key] = Object.assign(emptyEntries(), w.entries[d.key] || {}); });
+  });
+  if (!Array.isArray(m.history)) m.history = [];
+  if (!m.meta) m.meta = {};
+  return m;
+}
+
+/* ---- Loading all boards ---- */
+async function loadAllBoards() {
+  boards = {};
+  DEPTS.forEach(d => { boards[d.key] = { fileId: DRIVE_FILES[d.key], state: null, access: "loading", canEditFile: false }; });
+  masterBoard = { fileId: DRIVE_FILES.master, data: null, access: "loading", canEditFile: false };
+  await Promise.all([ ...DEPTS.map(d => loadDeptBoard(d.key)), loadMasterBoard() ]);
+}
+
+async function loadDeptBoard(key) {
+  const b = boards[key];
+  if (isPlaceholder(b.fileId)) { b.access = "none"; return; }
+  try {
+    const meta = await driveMeta(b.fileId);
+    b.canEditFile = !!(meta.capabilities && meta.capabilities.canEdit);
+    let parsed = await driveContent(b.fileId);
+    if (!parsed || !Array.isArray(parsed.pillars)) {
+      if (b.canEditFile) {
+        b.state = normalizeState(key === "digital" ? seedState() : emptyBoardState());
+        b.access = "edit";
+        await driveWrite(b.fileId, JSON.stringify(b.state));   // initialize the empty file
+      } else {
+        b.access = "view-uninit";
+      }
+      return;
+    }
+    b.state = normalizeState(parsed);
+    b.access = b.canEditFile ? "edit" : "view";
+  } catch (e) {
+    b.access = "none";     // 403/404 → no access to this department's file
+    b.error = e;
+  }
+}
+
+async function loadMasterBoard() {
+  const b = masterBoard;
+  if (isPlaceholder(b.fileId)) { b.access = "none"; return; }
+  try {
+    const meta = await driveMeta(b.fileId);
+    b.canEditFile = !!(meta.capabilities && meta.capabilities.canEdit);
+    let parsed = await driveContent(b.fileId);
+    if (!parsed || typeof parsed !== "object" || !parsed.lp) {
+      if (b.canEditFile) {
+        b.data = normalizeMaster(emptyMaster());
+        b.access = "edit";
+        await driveWrite(b.fileId, JSON.stringify(b.data));
+      } else {
+        b.access = "view-uninit";
+      }
+      return;
+    }
+    b.data = normalizeMaster(parsed);
+    b.access = b.canEditFile ? "edit" : "view";
+  } catch (e) {
+    b.access = "none";
+    b.error = e;
+  }
+}
+
+/* ---- Saving (routed to the active tab's file only) ---- */
+function save() {
+  if (activeTab === "master") saveMaster();
+  else saveDeptBoard(activeTab);
+}
+
+async function saveDeptBoard(key) {
+  const b = boards[key];
+  if (!b || b.access !== "edit" || !b.state) return;
+  b.state.meta = b.state.meta || {};
+  b.state.meta.lastSavedBy = userName();
+  b.state.meta.lastSavedAt = new Date().toISOString();
   setSaveStatus("Saving…");
   try {
-    await gapi.client.request({
-      path: "/upload/drive/v3/files/" + DRIVE_FILE_ID,
-      method: "PATCH",
-      params: { uploadType: "media" },
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(state)
-    });
-    updateSavedIndicator(state.meta.lastSavedBy, state.meta.lastSavedAt);
-    setSaveStatus("Saved ✓");
-    setTimeout(() => setSaveStatus(""), 1600);
+    await driveWrite(b.fileId, JSON.stringify(b.state));
+    if (activeTab === key) updateSavedIndicator(b.state.meta.lastSavedBy, b.state.meta.lastSavedAt);
+    setSaveStatus("Saved ✓"); setTimeout(() => setSaveStatus(""), 1600);
   } catch (e) {
     console.error("Drive save failed", e);
     setSaveStatus("Save failed");
-    alert("Could not save to Google Drive. Your change is not shared yet — click Refresh and try again.\n\n" +
+    alert("Could not save this department to Google Drive. Click Refresh and try again.\n\n" +
           (e && e.result && e.result.error ? e.result.error.message : ""));
   }
 }
 
-// Pull the latest copy of the shared file, recompute access, and render.
-async function refreshFromDrive() {
-  setSaveStatus("Loading…");
-  // 1) metadata: does this user have edit rights? + freshness
-  const meta = await gapi.client.drive.files.get({
-    fileId: DRIVE_FILE_ID,
-    fields: "name, capabilities(canEdit), modifiedTime, lastModifyingUser(displayName, emailAddress)"
-  });
-  canEdit = !!(meta.result.capabilities && meta.result.capabilities.canEdit);
-
-  // 2) file content
-  let parsed = null;
+async function saveMaster() {
+  const b = masterBoard;
+  if (!b || b.access !== "edit" || !b.data) return;
+  b.data.meta = b.data.meta || {};
+  b.data.meta.lastSavedBy = userName();
+  b.data.meta.lastSavedAt = new Date().toISOString();
+  setSaveStatus("Saving…");
   try {
-    const media = await gapi.client.drive.files.get({ fileId: DRIVE_FILE_ID, alt: "media" });
-    parsed = JSON.parse(media.body);
-  } catch (e) { parsed = null; }
-
-  if (!parsed || !Array.isArray(parsed.pillars)) {
-    // Empty / brand-new file: an editor initializes it with seed data; viewers must wait.
-    if (canEdit) {
-      state = normalizeState(seedState());
-      applyAccessMode();
-      render();
-      await saveToDrive();
-    } else {
-      throw new Error("The shared dashboard file has no data yet. Ask an editor to open it once to initialize it.");
-    }
-    return;
+    await driveWrite(b.fileId, JSON.stringify(b.data));
+    if (activeTab === "master") updateSavedIndicator(b.data.meta.lastSavedBy, b.data.meta.lastSavedAt);
+    setSaveStatus("Saved ✓"); setTimeout(() => setSaveStatus(""), 1600);
+  } catch (e) {
+    console.error("Master save failed", e);
+    setSaveStatus("Save failed");
+    alert("Could not save the Master file to Google Drive. Click Refresh and try again.\n\n" +
+          (e && e.result && e.result.error ? e.result.error.message : ""));
   }
-
-  state = normalizeState(parsed);
-  applyAccessMode();
-  if (canEdit) maybeDailySnapshot();   // keep the trend building without manual exports
-  render();
-
-  // freshness: prefer the in-file stamp, fall back to Drive metadata
-  const by = (state.meta && state.meta.lastSavedBy) ||
-             (meta.result.lastModifyingUser && meta.result.lastModifyingUser.displayName) || "—";
-  const at = (state.meta && state.meta.lastSavedAt) || meta.result.modifiedTime;
-  updateSavedIndicator(by, at);
-  setSaveStatus("");
 }
 
-// Record at most one history snapshot per calendar day, on first load. Editors only.
+// Per-board daily snapshot (department line charts). Editors only.
 function maybeDailySnapshot() {
   const today = new Date().toISOString().slice(0, 10);
   const hist = state.history || [];
@@ -913,7 +1196,21 @@ function maybeDailySnapshot() {
   const lastDay = last ? String(last.date).slice(0, 10) : null;
   if (lastDay === today) return false;
   recordSnapshot();
-  saveToDrive();
+  saveDeptBoard(activeTab);
+  return true;
+}
+
+// Master daily snapshot: combined + per-department scores into master.json. Master editor only.
+function maybeMasterDailySnapshot() {
+  if (!masterBoard || masterBoard.access !== "edit" || !masterBoard.data) return false;
+  const today = new Date().toISOString().slice(0, 10);
+  const hist = masterBoard.data.history;
+  const last = hist.length ? hist[hist.length - 1] : null;
+  if (last && String(last.date).slice(0, 10) === today) return false;
+  const depts = {};
+  DEPTS.forEach(d => { depts[d.key] = deptScore(d.key); });
+  hist.push({ date: new Date().toISOString(), overall: combinedHealth(), departments: depts });
+  saveMaster();
   return true;
 }
 
@@ -921,8 +1218,9 @@ function maybeDailySnapshot() {
    Google Sign-In + access mode
    ============================================================ */
 function isUnconfigured() {
-  return !GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.indexOf("PASTE_") === 0 ||
-         !DRIVE_FILE_ID || DRIVE_FILE_ID.indexOf("PASTE_") === 0;
+  // Sign-in only needs the Client ID + at least the Digital file. The other
+  // three file IDs can be filled in later; their tabs show a no-access notice.
+  return isPlaceholder(GOOGLE_CLIENT_ID) || isPlaceholder(DRIVE_FILES.digital);
 }
 
 // Called by the Google client libraries once they finish loading (script onload).
@@ -967,11 +1265,13 @@ function handleSignIn() {
 }
 
 async function afterAuth() {
-  setGateStatus("Loading dashboard…");
+  setGateStatus("Loading boards…");
   const about = await gapi.client.drive.about.get({ fields: "user(displayName, emailAddress)" });
   currentUser = about.result.user;
   document.getElementById("acctName").textContent = currentUser.displayName || currentUser.emailAddress;
-  await refreshFromDrive();
+  await loadAllBoards();
+  buildTabBar();
+  setActiveTab("master");
   showDashboard();
   setGateStatus("");
 }
@@ -980,7 +1280,7 @@ function handleSignOut() {
   if (accessToken && window.google && google.accounts && google.accounts.oauth2) {
     google.accounts.oauth2.revoke(accessToken, () => {});
   }
-  accessToken = null; currentUser = null; canEdit = false; state = null;
+  accessToken = null; currentUser = null; canEdit = false; state = null; boards = {}; masterBoard = null;
   if (window.gapi && gapi.client) gapi.client.setToken(null);
   document.body.classList.remove("readonly");
   showAuthGate();
@@ -989,10 +1289,15 @@ function handleSignOut() {
 
 async function handleRefresh() {
   if (!accessToken) return;
-  try { await refreshFromDrive(); }
-  catch (e) { alert("Refresh failed: " + (e.message || e)); }
+  setSaveStatus("Refreshing…");
+  try {
+    await loadAllBoards();
+    setActiveTab(activeTab);
+    setSaveStatus("");
+  } catch (e) { alert("Refresh failed: " + (e.message || e)); setSaveStatus(""); }
 }
 
+// Reflect the active board's edit rights across the whole UI.
 function applyAccessMode() {
   document.body.classList.toggle("readonly", !canEdit);
   const role = document.getElementById("acctRole");
@@ -1000,6 +1305,87 @@ function applyAccessMode() {
     role.textContent = canEdit ? "Editor" : "View only";
     role.className = "badge " + (canEdit ? "badge-edit" : "badge-view");
   }
+}
+
+/* ============================================================
+   Tabs
+   ============================================================ */
+function buildTabBar() {
+  const bar = document.getElementById("tabBar");
+  if (!bar) return;
+  const tabs = [{ key: "master", label: "Master" }].concat(DEPTS);
+  bar.innerHTML = tabs.map(t =>
+    '<button class="tab" data-tab="' + t.key + '">' + escapeHtml(t.label) + '</button>'
+  ).join("");
+}
+
+function updateTabButtons() {
+  document.querySelectorAll("#tabBar .tab").forEach(btn => {
+    btn.classList.toggle("active", btn.getAttribute("data-tab") === activeTab);
+  });
+}
+
+function setActiveTab(tab) {
+  activeTab = tab;
+  updateTabButtons();
+  const searchEl = document.getElementById("searchInput");
+  if (searchEl) searchEl.value = searchQuery = "";
+
+  if (tab === "master") {
+    canEdit = masterBoard && masterBoard.access === "edit";
+    applyAccessMode();
+    showContainer("master");
+    if (!masterBoard || masterBoard.access === "none") { renderNoAccess("master"); return; }
+    if (masterBoard.access === "view-uninit") { renderUninit("master"); return; }
+    maybeMasterDailySnapshot();
+    renderMaster();
+    const md = masterBoard.data.meta || {};
+    updateSavedIndicator(md.lastSavedBy, md.lastSavedAt);
+    return;
+  }
+
+  // department tab
+  const b = boards[tab];
+  showContainer("dept");
+  if (!b || b.access === "none") { canEdit = false; applyAccessMode(); renderNoAccess(tab); return; }
+  if (b.access === "view-uninit") { canEdit = false; applyAccessMode(); renderUninit(tab); return; }
+  state = b.state;
+  canEdit = (b.access === "edit");
+  currentView = "pillar";
+  applyAccessMode();
+  if (canEdit) maybeDailySnapshot();
+  render();
+  const dm = (state.meta) || {};
+  updateSavedIndicator(dm.lastSavedBy, dm.lastSavedAt);
+}
+
+function showContainer(which) {
+  document.getElementById("deptContainer").classList.toggle("hidden", which !== "dept");
+  document.getElementById("masterContainer").classList.toggle("hidden", which !== "master");
+}
+
+function renderNoAccess(tab) {
+  const el = (tab === "master") ? document.getElementById("masterView") : document.getElementById("view");
+  hideDeptChrome(tab !== "master");
+  const label = tab === "master" ? "the Master board" : (DEPT_LABEL[tab] || tab) + "’s board";
+  el.innerHTML = '<div class="board-msg"><h2>No access</h2>' +
+    '<p>You don’t have access to ' + escapeHtml(label) + '. Ask Mac to share the file with you in Google Drive ' +
+    '(and confirm you’re on the Google Cloud test-user list).</p></div>';
+}
+
+function renderUninit(tab) {
+  const el = (tab === "master") ? document.getElementById("masterView") : document.getElementById("view");
+  hideDeptChrome(tab !== "master");
+  el.innerHTML = '<div class="board-msg"><h2>Not set up yet</h2>' +
+    '<p>This board hasn’t been initialized. An editor needs to open it once to create its starting data.</p></div>';
+}
+
+// When a dept tab shows a message instead of a board, hide the toolbar/strip/charts.
+function hideDeptChrome(hide) {
+  ["deptToolbar", "stripWrap", "chartsRow"].forEach(id => {
+    const e = document.getElementById(id);
+    if (e) e.classList.toggle("hidden", hide);
+  });
 }
 
 function showDashboard() {
@@ -1094,6 +1480,12 @@ function renderPillarView() {
     html += '<span class="weight">weight <input type="number" step="0.1" min="0" value="' + p.weight + '" data-weight="' + p.id + '"' + (canEdit ? '' : ' disabled') + ' /></span>';
     html += '<span class="statuslabel colored">' + pb.label + '</span>';
     html += scoreChip(ps);
+    html += '<span class="hdr-ctl">' +
+      '<button class="ctl" data-move-pillar="' + p.id + '" data-dir="up" title="Move pillar up">▲</button>' +
+      '<button class="ctl" data-move-pillar="' + p.id + '" data-dir="down" title="Move pillar down">▼</button>' +
+      '<button class="ctl" data-add-sub-to="' + p.id + '" title="Add sub-section">+ Sub</button>' +
+      '<button class="ctl danger-ctl" data-del-pillar="' + p.id + '" title="Delete pillar">🗑</button>' +
+      '</span>';
     html += '</div>';
 
     for (const sub of p.subSections) {
@@ -1105,6 +1497,11 @@ function renderPillarView() {
         ' <button class="pencil" data-edit-sub="' + sub.id + '" title="Rename sub-section" aria-label="Rename sub-section">✎</button></h3>';
       html += '<span class="statuslabel colored ' + sb.cls + '">' + sb.label + '</span>';
       html += scoreChip(ss);
+      html += '<span class="hdr-ctl">' +
+        '<button class="ctl" data-move-sub="' + sub.id + '" data-dir="up" title="Move sub-section up">▲</button>' +
+        '<button class="ctl" data-move-sub="' + sub.id + '" data-dir="down" title="Move sub-section down">▼</button>' +
+        '<button class="ctl danger-ctl" data-del-sub="' + sub.id + '" title="Delete sub-section">🗑</button>' +
+        '</span>';
       html += '</div>';
       const shown = activeItems(sub);
       if (shown.length === 0) {
@@ -1369,12 +1766,198 @@ function renderCharts() {
 }
 
 function render() {
+  if (activeTab === "master") return;      // master has its own renderer
+  const empty = !state || !state.pillars || state.pillars.length === 0;
+  const searching = !!searchQuery;
+  document.getElementById("deptToolbar").classList.remove("hidden");
+  document.getElementById("stripWrap").classList.toggle("hidden", empty || searching);
+  document.getElementById("chartsRow").classList.toggle("hidden", empty || searching);
+
+  if (searching) { renderDeptSearch(); return; }
+  if (empty) { renderEmptyDept(); return; }
+
   renderOverall();
   renderStrip();
   renderCharts();
   if (currentView === "pillar") renderPillarView();
   else if (currentView === "dept") renderDeptView();
+  else if (currentView === "todo") renderTodoView();
   else renderArchive();
+}
+
+function renderEmptyDept() {
+  const root = document.getElementById("view");
+  const label = DEPT_LABEL[activeTab] || "This department";
+  root.innerHTML = '<div class="board-msg"><h2>' + escapeHtml(label) + ' has no pillars yet</h2>' +
+    '<p>' + (canEdit
+      ? "Build this board’s structure: add your first pillar, then add sub-sections and items inside it."
+      : "This board hasn’t been built out yet — its department head will add pillars soon.") + '</p>' +
+    (canEdit ? '<button class="primary big" data-add-first-pillar="1">+ Add your first pillar</button>' : "") +
+    '</div>';
+}
+
+/* ============================================================
+   Pillar / sub-section CRUD + reorder (editors only)
+   ============================================================ */
+function nextPillarOrder() { return state.pillars.length ? Math.max.apply(null, state.pillars.map(p => p.order || 0)) + 1 : 0; }
+
+function addPillar() {
+  if (!canEdit) return;
+  const name = (prompt("New pillar name:") || "").trim();
+  if (!name) return;
+  const p = { id: newId("pillar"), name: name, weight: 1.0, freeform: false, order: nextPillarOrder(),
+              subSections: [{ id: newId("sub"), name: "General", items: [] }] };
+  state.pillars.push(p);
+  save(); render();
+}
+
+function addSubSection(pillarId) {
+  if (!canEdit) return;
+  let p;
+  if (pillarId) { p = state.pillars.find(x => x.id === pillarId); }
+  else {
+    if (!state.pillars.length) { alert("Add a pillar first."); return; }
+    const names = state.pillars.map((x, i) => (i + 1) + ". " + x.name).join("\n");
+    const pick = prompt("Add a sub-section to which pillar? Enter the number:\n\n" + names);
+    if (pick === null) return;
+    const idx = parseInt(pick, 10) - 1;
+    if (isNaN(idx) || idx < 0 || idx >= state.pillars.length) return;
+    p = state.pillars[idx];
+  }
+  if (!p) return;
+  const name = (prompt('New sub-section name (in "' + p.name + '"):') || "").trim();
+  if (!name) return;
+  p.subSections.push({ id: newId("sub"), name: name, items: [] });
+  save(); render();
+}
+
+function deletePillar(id) {
+  if (!canEdit) return;
+  const p = state.pillars.find(x => x.id === id); if (!p) return;
+  const items = p.subSections.reduce((a, s) => a + s.items.length, 0);
+  const msg = items > 0
+    ? 'Delete the pillar "' + p.name + '"?\n\nThis removes ' + p.subSections.length + ' sub-section(s) and ' +
+      items + ' item(s). This cannot be undone.'
+    : 'Delete the empty pillar "' + p.name + '"?';
+  if (!confirm(msg)) return;
+  state.pillars = state.pillars.filter(x => x.id !== id);
+  save(); render();
+}
+
+function deleteSubSection(id) {
+  if (!canEdit) return;
+  let owner = null, sub = null;
+  for (const p of state.pillars) { const s = p.subSections.find(x => x.id === id); if (s) { owner = p; sub = s; break; } }
+  if (!sub) return;
+  const n = sub.items.length;
+  const msg = n > 0
+    ? 'Delete the sub-section "' + sub.name + '"?\n\nThis removes ' + n + ' item(s). This cannot be undone.'
+    : 'Delete the empty sub-section "' + sub.name + '"?';
+  if (!confirm(msg)) return;
+  owner.subSections = owner.subSections.filter(x => x.id !== id);
+  save(); render();
+}
+
+function movePillar(id, dir) {
+  if (!canEdit) return;
+  const arr = state.pillars;
+  const i = arr.findIndex(p => p.id === id); if (i < 0) return;
+  const j = dir === "up" ? i - 1 : i + 1; if (j < 0 || j >= arr.length) return;
+  const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  arr.forEach((p, k) => p.order = k);      // rewrite order to positional so it persists
+  save(); render();
+}
+
+function moveSubSection(id, dir) {
+  if (!canEdit) return;
+  for (const p of state.pillars) {
+    const i = p.subSections.findIndex(s => s.id === id);
+    if (i >= 0) {
+      const j = dir === "up" ? i - 1 : i + 1; if (j < 0 || j >= p.subSections.length) return;
+      const tmp = p.subSections[i]; p.subSections[i] = p.subSections[j]; p.subSections[j] = tmp;
+      save(); render(); return;
+    }
+  }
+}
+
+/* ============================================================
+   Search + Todo view
+   ============================================================ */
+function clearSearch() {
+  searchQuery = "";
+  const si = document.getElementById("searchInput"); if (si) si.value = "";
+  document.getElementById("searchClear").classList.add("hidden");
+  if (activeTab === "master") renderMaster(); else render();
+}
+
+function itemMatches(item, q) {
+  q = q.toLowerCase();
+  return (item.name || "").toLowerCase().includes(q) ||
+         (item.note || "").toLowerCase().includes(q) ||
+         (item.owner || "").toLowerCase().includes(q) ||
+         (item.tags || []).some(t => t.toLowerCase().includes(q));
+}
+
+function collectItems(st) {
+  const out = [];
+  for (const p of st.pillars) for (const s of p.subSections) for (const it of s.items)
+    out.push({ item: it, pillar: p, sub: s });
+  return out;
+}
+
+function renderDeptSearch() {
+  const root = document.getElementById("view");
+  const q = searchQuery;
+  const matches = collectItems(state).filter(x => itemMatches(x.item, q));
+  let html = '<div class="search-head">' + matches.length + ' result' + (matches.length === 1 ? "" : "s") +
+             ' for "' + escapeHtml(q) + '" in ' + escapeHtml(DEPT_LABEL[activeTab] || activeTab) + '</div>';
+  if (!matches.length) html += '<div class="empty">No matching items.</div>';
+  else {
+    html += '<div class="grid">';
+    matches.forEach(m => {
+      const arch = m.item.status === "completed";
+      html += cardHTML(m.item, { from: (arch ? "Archived · " : "") + m.pillar.name + " › " + m.sub.name });
+    });
+    html += '</div>';
+  }
+  root.innerHTML = html;
+}
+
+function priorityAgeLabel(it) {
+  if (!it.priorityUpdated) return "";
+  const d = new Date(it.priorityUpdated); if (isNaN(d.getTime())) return "";
+  const days = Math.floor((Date.now() - d.getTime()) / 86400000);
+  if (days > 60) return '<span class="stale">set ' + days + ' days ago</span>';
+  return '<span class="fresh">set ' + days + 'd ago</span>';
+}
+
+function renderTodoView() {
+  const root = document.getElementById("view");
+  const items = collectItems(state)
+    .filter(x => x.item.status !== "completed" && (Number(x.item.priority) || 0) >= 1)
+    .sort((a, b) => (Number(b.item.priority) || 0) - (Number(a.item.priority) || 0));
+  if (!items.length) {
+    root.innerHTML = '<div class="empty">No prioritized items. Open an item and set its priority to 1–10 to see it here.</div>';
+    return;
+  }
+  let html = '<div class="todo-list">';
+  html += '<div class="todo-row todo-headrow"><span>Item</span><span>Priority</span><span>Health</span><span>Owner</span><span></span></div>';
+  items.forEach(x => {
+    const it = x.item;
+    const pr = Number(it.priority) || 0;
+    const pb = band(pr), hb = band(itemScore(it));
+    html += '<div class="todo-row" data-id="' + it.id + '">' +
+      '<div class="todo-main"><div class="todo-name">' + escapeHtml(it.name) + '</div>' +
+        '<div class="todo-loc">' + escapeHtml(x.pillar.name) + ' › ' + escapeHtml(x.sub.name) +
+        (it.note ? ' · ' + escapeHtml(it.note) : "") + '</div></div>' +
+      '<div class="todo-num tinted ' + pb.cls + '"><span class="tn">' + pr + '</span><span class="tl">priority</span></div>' +
+      '<div class="todo-num tinted ' + hb.cls + '"><span class="tn">' + itemScore(it) + '</span><span class="tl">health</span></div>' +
+      '<div class="todo-owner">' + escapeHtml(it.owner || "—") + '</div>' +
+      '<div class="todo-stale">' + priorityAgeLabel(it) + '</div>' +
+      '</div>';
+  });
+  html += '</div>';
+  root.innerHTML = html;
 }
 
 function escapeHtml(str) {
@@ -1406,6 +1989,7 @@ function openEditor(itemId) {
   document.getElementById("fOwner").value = item ? item.owner : "";
   document.getElementById("fNote").value = item ? item.note : "";
   document.getElementById("fTags").value = item ? (item.tags || []).join(", ") : "";
+  document.getElementById("fPriority").value = item ? (Number(item.priority) || 0) : 0;
   document.getElementById("fScore").value = item ? (item.mode === "judged" ? item.score : 6) : 6;
   document.getElementById("fTarget").value = item ? item.target : "";
   document.getElementById("fActual").value = item ? item.actual : "";
@@ -1518,6 +2102,14 @@ function persistFromEditor(complete) {
   item.owner = document.getElementById("fOwner").value.trim();
   item.note = document.getElementById("fNote").value.trim();
   item.tags = tags;
+  // priority (0–10) is independent of health; stamp priorityUpdated only when it changes
+  const newPriority = clamp(Number(document.getElementById("fPriority").value) || 0, 0, 10);
+  if (newPriority !== (Number(item.priority) || 0)) {
+    item.priority = newPriority;
+    item.priorityUpdated = new Date().toISOString();
+  } else if (item.priority == null) {
+    item.priority = 0;
+  }
   if (complete) {
     item.status = "completed";
     item.completionDate = new Date().toISOString();
@@ -1625,43 +2217,51 @@ function recordSnapshot() {
   });
 }
 
-function exportJSON() {
-  // Export is a manual backup and works for everyone (incl. view-only).
-  // Editors also stamp a fresh snapshot into the shared file as part of the export.
-  if (canEdit) {
-    recordSnapshot();
-    save();
-    render();
-  }
-  const data = JSON.stringify(state, null, 2);
-  const blob = new Blob([data], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
+function dateStamp() {
   const d = new Date();
-  const stamp = d.getFullYear() + "-" +
-    String(d.getMonth() + 1).padStart(2, "0") + "-" +
-    String(d.getDate()).padStart(2, "0");
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+function downloadJSON(obj, filename) {
+  const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url;
-  a.download = "marketing-health-" + stamp + ".json";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+// Export the CURRENT department board (backup). Works for everyone.
+function exportJSON() {
+  if (canEdit) { recordSnapshot(); save(); render(); }
+  downloadJSON(state, activeTab + "-board-" + dateStamp() + ".json");
+}
+
+// Master export bundles all four files.
+function exportMaster() {
+  const bundle = {
+    exported: dateStamp(),
+    master: masterBoard ? masterBoard.data : null,
+    digital: boards.digital ? boards.digital.state : null,
+    telemarketing: boards.telemarketing ? boards.telemarketing.state : null,
+    canvassing: boards.canvassing ? boards.canvassing.state : null
+  };
+  downloadJSON(bundle, "qfhi-marketing-all-boards-" + dateStamp() + ".json");
+}
+
 function importJSON(file) {
-  if (!canEdit) return;
+  if (!canEdit || activeTab === "master") return;
   const reader = new FileReader();
   reader.onload = function (e) {
     let parsed;
     try { parsed = JSON.parse(e.target.result); }
     catch (err) { alert("That file is not valid JSON."); return; }
     if (!parsed || !Array.isArray(parsed.pillars)) {
-      alert("That JSON does not look like a dashboard export (missing 'pillars').");
+      alert("That JSON does not look like a department board (missing 'pillars').");
       return;
     }
-    if (!confirm("Import will replace all current data with the contents of this file. Continue?")) return;
+    if (!confirm("Import will replace THIS department's data (" + (DEPT_LABEL[activeTab] || activeTab) + ") with the file. Continue?")) return;
     state = normalizeState(parsed);
+    boards[activeTab].state = state;          // keep the board reference in sync
     save();
     render();
     alert("Import complete.");
@@ -1670,11 +2270,332 @@ function importJSON(file) {
 }
 
 function resetState() {
-  if (!canEdit) return;
-  if (!confirm("Reset to the seeded starting data? All current changes will be lost.")) return;
-  state = normalizeState(seedState());
+  if (!canEdit || activeTab === "master") return;
+  const isDigital = activeTab === "digital";
+  const msg = isDigital
+    ? "Reset Digital Marketing to the original seeded board? All current changes will be lost."
+    : "Clear this department board back to empty (no pillars)? All current changes will be lost.";
+  if (!confirm(msg)) return;
+  state = normalizeState(isDigital ? seedState() : emptyBoardState());
+  boards[activeTab].state = state;
   save();
   render();
+}
+
+/* ============================================================
+   Master tab + LP Tracking (reads all boards, writes master.json)
+   ============================================================ */
+function lpQuarter() { return masterBoard.data.lp.quarter; }
+function pct(n, d) { return d ? (n / d * 100) : 0; }          // divide-by-zero guard → 0
+function fmtPct(v) { return (Math.round(v * 10) / 10).toFixed(1) + "%"; }
+function fmtMoney(n) { return "$" + (Number(n) || 0).toLocaleString(undefined, { maximumFractionDigits: 0 }); }
+
+function sumEntries(weeks, key) {
+  const t = emptyEntries();
+  weeks.forEach(w => { const e = (w.entries && w.entries[key]) || {}; for (const k in t) t[k] += Number(e[k]) || 0; });
+  return t;
+}
+function deptTotals(key) { return sumEntries(lpQuarter().weeks, key); }
+function grandTotals() { const t = emptyEntries(); DEPTS.forEach(d => { const dt = deptTotals(d.key); for (const k in t) t[k] += dt[k]; }); return t; }
+
+// Compute the calculated columns from entered totals. Totals recompute from summed counts.
+function lpRow(t) {
+  return {
+    raw: t.raw, set: t.set, issue: t.issue, pctIssue: pct(t.issue, t.set),
+    demo: t.demo, pctDemo: pct(t.demo, t.issue),
+    sold: t.sold, pctGross: pct(t.sold, t.demo),
+    grossSale: t.grossSale, netClose: t.netClose, pctNet: pct(t.netClose, t.demo), netSale: t.netSale
+  };
+}
+
+function weeksRemaining() {
+  const q = lpQuarter();
+  if (!q.endDate) return null;
+  const end = new Date(q.endDate + "T23:59:59"); const now = new Date();
+  const ms = end - now;
+  return ms <= 0 ? 0 : Math.ceil(ms / (7 * 86400000));
+}
+function stretchOf(goal) { return Math.round((Number(goal) || 0) * 1.10); }
+function paceText(remaining, needed) {
+  if (remaining === null) return "set end date";
+  if (needed <= 0) return "met ✓";
+  if (remaining === 0) return "quarter over";
+  return Math.ceil(needed / remaining) + "/wk";
+}
+
+function renderMaster() {
+  const root = document.getElementById("masterView");
+  if (searchQuery) { renderMasterSearch(root); return; }
+  let h = "";
+  h += renderCombinedHealth();
+  h += renderDeptBreakouts();
+  h += '<div class="master-card"><h3>Overall Marketing Health Over Time</h3>' + masterTrendSVG() + '</div>';
+  h += '<div class="section-sep"><span>LP Tracking — Lead Funnel</span></div>';
+  h += '<div class="lp-note">Separate from health. Health answers “is the channel in good shape.” LP Tracking answers “how is the lead funnel performing.” Never blended into one number.</div>';
+  h += renderLPSection(canEdit);
+  root.innerHTML = h;
+}
+
+function renderCombinedHealth() {
+  const o = combinedHealth();
+  const b = band(o === null ? null : o / 10);
+  return '<div class="master-health ' + b.cls + '">' +
+    '<div class="overall-label">Overall Marketing Health</div>' +
+    '<div class="overall-row"><div class="big mh-big">' + (o === null ? "--" : o) + '<small>/100</small></div>' +
+    '<div class="status-pill colored">' + b.label + '</div></div>' +
+    '<div class="mh-note">Weighted blend of the three departments. An empty board counts as “No data” and is excluded, not zero.</div>' +
+    '</div>';
+}
+
+function renderDeptBreakouts() {
+  const w = masterBoard.data.weights;
+  let h = '<div class="dept-breakouts">';
+  DEPTS.forEach(d => {
+    const b = boards[d.key];
+    const s = deptScore(d.key);
+    const bd = band(s);
+    const items = (b && b.state) ? b.state.pillars.reduce((a, p) => a + p.subSections.reduce((x, su) => x + activeItems(su).length, 0), 0) : 0;
+    const noAccess = !b || b.access === "none";
+    h += '<div class="dept-card tinted ' + bd.cls + '" data-jump="' + d.key + '">' +
+      '<div class="dc-top"><span class="dc-name">' + escapeHtml(d.label) + '</span>' +
+      '<span class="scorechip tinted ' + bd.cls + '">' + (s === null ? "—" : fmtScore(s)) + '<small>/10</small></span></div>' +
+      '<div class="dc-status statuslabel colored">' + (s === null ? "No data" : bd.label) + '</div>' +
+      '<div class="dc-meta">' + (noAccess ? "no access to this file" : (items + " active item" + (items === 1 ? "" : "s"))) + ' · tap to open</div>' +
+      (canEdit ? '<div class="dc-weight">weight <input type="number" step="0.1" min="0" value="' + (w[d.key] != null ? w[d.key] : 1) + '" data-weight="' + d.key + '"></div>' : "") +
+      '</div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+function masterTrendSVG() {
+  const hist = masterBoard.data.history || [];
+  if (hist.length < 2) return '<div class="chart-empty">Not enough history yet — a snapshot records automatically each day Mac opens Master.</div>';
+  const W = 720, H = 240, padL = 32, padR = 16, padT = 16, padB = 30;
+  const plotW = W - padL - padR, plotH = H - padT - padB, n = hist.length;
+  const X = i => padL + (i / (n - 1)) * plotW, Y = v => padT + (1 - v / 100) * plotH;
+  let grid = "";
+  [0, 25, 50, 75, 100].forEach(v => {
+    const y = Y(v);
+    grid += '<line x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + y.toFixed(1) + '" stroke="var(--line)"/>' +
+            '<text x="' + (padL - 6) + '" y="' + (y + 3).toFixed(1) + '" text-anchor="end" font-size="9" fill="var(--muted)">' + v + '</text>';
+  });
+  const pts = hist.map((h, i) => [X(i), Y(h.overall || 0)]);
+  const poly = pts.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+  let dots = "";
+  hist.forEach((h, i) => {
+    const c = bandHex(band((h.overall || 0) / 10).key);
+    dots += '<circle cx="' + pts[i][0].toFixed(1) + '" cy="' + pts[i][1].toFixed(1) + '" r="3.5" fill="' + c + '" stroke="var(--panel)" stroke-width="1.5"/>';
+  });
+  const step = Math.max(1, Math.ceil(n / 8));
+  let xl = "";
+  hist.forEach((h, i) => {
+    if (i % step !== 0 && i !== n - 1) return;
+    const d = new Date(h.date);
+    const lbl = isNaN(d.getTime()) ? "" : (d.getMonth() + 1) + "/" + d.getDate();
+    xl += '<text x="' + pts[i][0].toFixed(1) + '" y="' + (H - padB + 14) + '" text-anchor="middle" font-size="9" fill="var(--muted)">' + lbl + '</text>';
+  });
+  return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" style="width:100%;height:auto;display:block">' +
+    grid + '<polyline points="' + poly + '" fill="none" stroke="#5b8def" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' + dots + xl + '</svg>';
+}
+
+function renderMasterSearch(root) {
+  const q = searchQuery;
+  let results = [];
+  DEPTS.forEach(d => {
+    const b = boards[d.key];
+    if (b && b.state) collectItems(b.state).forEach(x => { if (itemMatches(x.item, q)) results.push({ deptKey: d.key, deptLabel: d.label, x: x }); });
+  });
+  let h = '<div class="search-head">' + results.length + ' result' + (results.length === 1 ? "" : "s") +
+          ' for "' + escapeHtml(q) + '" across all departments</div>';
+  if (!results.length) h += '<div class="empty">No matching items.</div>';
+  else {
+    h += '<div class="grid">';
+    results.forEach(m => {
+      const arch = m.x.item.status === "completed";
+      const from = (arch ? "Archived · " : "") + m.deptLabel + " › " + m.x.pillar.name + " › " + m.x.sub.name;
+      h += '<div data-jump="' + m.deptKey + '">' + cardHTML(m.x.item, { from: from }) + '</div>';
+    });
+    h += '</div>';
+  }
+  root.innerHTML = h;
+}
+
+/* ---- LP Tracking rendering ---- */
+function renderLPSection(ed) {
+  const q = lpQuarter();
+  let h = '<div class="lp-quarterbar">';
+  h += '<div class="lp-qmeta">';
+  if (ed) {
+    h += 'Quarter <input class="mini wide" type="text" data-qlabel="1" value="' + escapeHtml(q.label || "") + '"> ' +
+         'start <input class="mini" type="date" data-qstart="1" value="' + (q.startDate || "") + '"> ' +
+         'end <input class="mini" type="date" data-qend="1" value="' + (q.endDate || "") + '">';
+  } else {
+    h += '<strong>' + escapeHtml(q.label || "Current Quarter") + '</strong>' + (q.startDate ? " · " + q.startDate + " → " + (q.endDate || "?") : "");
+  }
+  const wr = weeksRemaining();
+  h += ' <span class="wr">' + (wr === null ? "no end date set" : wr + " week(s) left") + '</span>';
+  h += '</div>';
+  if (ed) h += '<button class="ctl" data-start-quarter="1">Start New Quarter</button>';
+  h += '</div>';
+
+  // funnel table
+  const rows = DEPTS.map(d => ({ label: d.label, r: lpRow(deptTotals(d.key)) }));
+  const totalR = lpRow(grandTotals());
+  h += '<div class="lp-tablewrap"><table class="lp-table"><thead><tr>' +
+    '<th>Dept</th><th>Raw</th><th>Set</th><th>Issue</th><th>% Issue</th><th>Demo</th><th>% Demo</th>' +
+    '<th>Sold</th><th>% Gross</th><th>Gross $</th><th># Net</th><th>% Net</th><th>Net $</th></tr></thead><tbody>';
+  rows.forEach(x => h += lpTableRow(x.label, x.r, false));
+  h += lpTableRow("Total", totalR, true);
+  h += '</tbody></table></div>';
+
+  h += renderGoals(ed);
+  if (ed) h += renderWeeklyEntry();
+  h += renderMonthlyRollup();
+  return h;
+}
+
+function lpTableRow(label, r, isTotal) {
+  const c = v => "<td>" + v + "</td>";
+  return '<tr class="' + (isTotal ? "lp-total" : "") + '">' +
+    '<td class="lp-deptname">' + escapeHtml(label) + '</td>' +
+    c(r.raw) + c(r.set) + c(r.issue) + c(fmtPct(r.pctIssue)) + c(r.demo) + c(fmtPct(r.pctDemo)) +
+    c(r.sold) + c(fmtPct(r.pctGross)) + c(fmtMoney(r.grossSale)) + c(r.netClose) + c(fmtPct(r.pctNet)) + c(fmtMoney(r.netSale)) +
+    '</tr>';
+}
+
+function progressBar(val, goal, st) {
+  const denom = Math.max(st, goal, val, 1);
+  const fill = Math.min(100, (val / denom) * 100);
+  const goalMark = (goal / denom) * 100, stMark = (st / denom) * 100;
+  return '<div class="pbar"><div class="pbar-fill" style="width:' + fill.toFixed(1) + '%"></div>' +
+    '<div class="pbar-mark" style="left:' + goalMark.toFixed(1) + '%" title="Goal"></div>' +
+    '<div class="pbar-mark stretch" style="left:' + stMark.toFixed(1) + '%" title="Stretch"></div></div>';
+}
+
+function renderGoals(ed) {
+  const q = lpQuarter();
+  const wr = weeksRemaining();
+  // Goal 1 — demo count
+  let g1 = '<div class="goalcard"><h4>Goal 1 · Demo Count <span class="goalsub">volume target · stretch = goal × 1.10</span></h4>';
+  g1 += '<table class="goal-table"><thead><tr><th>Dept</th><th>Goal</th><th>Stretch</th><th>To date</th><th>Variance</th><th>Pace→Goal</th><th>Pace→Stretch</th></tr></thead><tbody>';
+  let tg = 0, td = 0;
+  DEPTS.forEach(d => {
+    const goal = Number(q.demoGoals[d.key]) || 0, st = stretchOf(goal), demos = deptTotals(d.key).demo;
+    tg += goal; td += demos;
+    const varc = demos - goal;
+    g1 += '<tr><td class="lp-deptname">' + escapeHtml(d.label) + '</td>' +
+      '<td>' + (ed ? '<input class="mini" type="number" min="0" data-goal="' + d.key + '" value="' + goal + '">' : goal) + '</td>' +
+      '<td>' + st + '</td><td>' + demos + '</td>' +
+      '<td class="' + (varc >= 0 ? "pos" : "neg") + '">' + (varc >= 0 ? "+" : "") + varc + '</td>' +
+      '<td>' + paceText(wr, goal - demos) + '</td><td>' + paceText(wr, st - demos) + '</td></tr>' +
+      '<tr class="barrow"><td colspan="7">' + progressBar(demos, goal, st) + '</td></tr>';
+  });
+  const tst = stretchOf(tg);
+  g1 += '<tr class="lp-total"><td>Total</td><td>' + tg + '</td><td>' + tst + '</td><td>' + td + '</td>' +
+    '<td class="' + ((td - tg) >= 0 ? "pos" : "neg") + '">' + ((td - tg) >= 0 ? "+" : "") + (td - tg) + '</td>' +
+    '<td>' + paceText(wr, tg - td) + '</td><td>' + paceText(wr, tst - td) + '</td></tr>';
+  g1 += '</tbody></table></div>';
+
+  // Goal 2 — demo %
+  let g2 = '<div class="goalcard"><h4>Goal 2 · Demo % <span class="goalsub">quality floor · meet or beat last quarter · no stretch</span></h4>';
+  g2 += '<table class="goal-table"><thead><tr><th>Dept</th><th>Benchmark</th><th>Current</th><th>Status</th></tr></thead><tbody>';
+  DEPTS.forEach(d => {
+    const t = deptTotals(d.key); const cur = pct(t.demo, t.issue);
+    const bmRaw = q.demoBenchmarks[d.key];
+    const bm = (bmRaw === null || bmRaw === undefined || bmRaw === "") ? null : Number(bmRaw);
+    const pass = bm === null ? null : (cur >= bm);
+    g2 += '<tr><td class="lp-deptname">' + escapeHtml(d.label) + '</td>' +
+      '<td>' + (ed ? '<input class="mini" type="number" step="0.1" placeholder="—" data-benchmark="' + d.key + '" value="' + (bm === null ? "" : bm) + '">' : (bm === null ? "—" : fmtPct(bm))) + '</td>' +
+      '<td>' + fmtPct(cur) + '</td>' +
+      '<td>' + (pass === null ? '<span class="muted">set benchmark</span>' : (pass ? '<span class="pass">PASS ✓</span>' : '<span class="fail">BELOW</span>')) + '</td></tr>';
+  });
+  g2 += '</tbody></table></div>';
+
+  return '<div class="lp-goals-wrap">' + g1 + g2 + '</div>' +
+    '<div class="lp-goalnote">These two goals pull against each other — pushing volume drags the rate down; protecting the rate lowers volume. Shown separately on purpose, never combined into one “on track” number.</div>';
+}
+
+function renderWeeklyEntry() {
+  const q = lpQuarter();
+  const fields = [["raw", "Raw"], ["set", "Set"], ["issue", "Issue"], ["demo", "Demo"], ["sold", "Sold"], ["grossSale", "Gross $"], ["netClose", "# Net"], ["netSale", "Net $"]];
+  let h = '<div class="lp-entry"><div class="lp-entry-head"><h4>Weekly Entry</h4><button class="ctl" data-add-week="1">+ Add Week</button></div>';
+  if (!q.weeks.length) h += '<div class="empty">No weeks yet. Click “Add Week”, set the week-of date, and enter each department’s numbers.</div>';
+  q.weeks.forEach((w, i) => {
+    h += '<div class="week-block"><div class="week-top">Week of <input type="date" data-weekof="' + i + '" value="' + (w.weekOf || "") + '"><button class="ctl danger-ctl" data-del-week="' + i + '" title="Delete week">🗑</button></div>';
+    h += '<div class="lp-tablewrap"><table class="entry-table"><thead><tr><th>Dept</th>' + fields.map(f => "<th>" + f[1] + "</th>").join("") + '</tr></thead><tbody>';
+    DEPTS.forEach(d => {
+      h += '<tr><td class="lp-deptname">' + escapeHtml(d.label) + '</td>' +
+        fields.map(f => '<td><input class="mini" type="number" step="any" data-week-entry="' + i + ":" + d.key + ":" + f[0] + '" value="' + (w.entries[d.key][f[0]] || 0) + '"></td>').join("") + '</tr>';
+    });
+    h += '</tbody></table></div></div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+function renderMonthlyRollup() {
+  const q = lpQuarter();
+  if (!q.weeks.length) return "";
+  const months = {};
+  q.weeks.forEach(w => { const m = (w.weekOf || "").slice(0, 7) || "—"; (months[m] = months[m] || []).push(w); });
+  let h = '<div class="lp-monthly"><h4>Monthly Rollup</h4>';
+  Object.keys(months).sort().forEach(m => {
+    const ws = months[m];
+    h += '<div class="month-block"><div class="month-label">' + escapeHtml(m) + '</div>';
+    h += '<div class="lp-tablewrap"><table class="lp-table"><thead><tr><th>Dept</th><th>Raw</th><th>Set</th><th>Issue</th><th>% Issue</th><th>Demo</th><th>% Demo</th><th>Sold</th><th>% Gross</th><th>Gross $</th><th># Net</th><th>% Net</th><th>Net $</th></tr></thead><tbody>';
+    let tot = emptyEntries();
+    DEPTS.forEach(d => { const t = sumEntries(ws, d.key); for (const k in tot) tot[k] += t[k]; h += lpTableRow(d.label, lpRow(t), false); });
+    h += lpTableRow("Total", lpRow(tot), true);
+    h += '</tbody></table></div></div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+/* ---- Master interaction ---- */
+function masterClickHandler(e) {
+  const jump = e.target.closest("[data-jump]");
+  if (jump && !e.target.closest("input")) { setActiveTab(jump.getAttribute("data-jump")); return; }
+  if (!canEdit) return;
+  if (e.target.closest("[data-add-week]")) { addWeek(); return; }
+  const dw = e.target.closest("[data-del-week]");
+  if (dw) { delWeek(parseInt(dw.getAttribute("data-del-week"), 10)); return; }
+  if (e.target.closest("[data-start-quarter]")) { startNewQuarter(); return; }
+}
+
+function masterChangeHandler(e) {
+  if (!canEdit) return;
+  const t = e.target, q = lpQuarter(), m = masterBoard.data;
+  const g = t.getAttribute("data-goal"), bm = t.getAttribute("data-benchmark"),
+        w = t.getAttribute("data-weight"), we = t.getAttribute("data-week-entry"),
+        wof = t.getAttribute("data-weekof");
+  if (g) { q.demoGoals[g] = Math.max(0, Number(t.value) || 0); saveMaster(); renderMaster(); return; }
+  if (bm) { const v = t.value.trim(); q.demoBenchmarks[bm] = v === "" ? null : (Number(v) || 0); saveMaster(); renderMaster(); return; }
+  if (w) { m.weights[w] = Number(t.value) || 0; saveMaster(); renderMaster(); return; }
+  if (we) { const parts = we.split(":"); q.weeks[+parts[0]].entries[parts[1]][parts[2]] = Number(t.value) || 0; saveMaster(); renderMaster(); return; }
+  if (wof !== null) { q.weeks[+wof].weekOf = t.value; saveMaster(); renderMaster(); return; }
+  if (t.hasAttribute("data-qlabel")) { q.label = t.value; saveMaster(); return; }
+  if (t.hasAttribute("data-qstart")) { q.startDate = t.value; saveMaster(); renderMaster(); return; }
+  if (t.hasAttribute("data-qend")) { q.endDate = t.value; saveMaster(); renderMaster(); return; }
+}
+
+function addWeek() {
+  const q = lpQuarter();
+  const w = { weekOf: new Date().toISOString().slice(0, 10), entries: {} };
+  DEPTS.forEach(d => { w.entries[d.key] = emptyEntries(); });
+  q.weeks.push(w); saveMaster(); renderMaster();
+}
+function delWeek(i) {
+  if (!confirm("Delete this week's entries?")) return;
+  lpQuarter().weeks.splice(i, 1); saveMaster(); renderMaster();
+}
+function startNewQuarter() {
+  if (!confirm("Start a new quarter?\n\nThe current quarter (entered data, demo-count goals, and demo % benchmarks) is archived for reference, and a fresh quarter begins. Benchmarks start empty for you to fill in.")) return;
+  const m = masterBoard.data;
+  m.lp.archive.push(m.lp.quarter);
+  m.lp.quarter = newQuarter("New Quarter");
+  saveMaster(); renderMaster();
 }
 
 /* ============================================================
@@ -1697,7 +2618,33 @@ function wire() {
 
   document.getElementById("viewPillar").addEventListener("click", () => setView("pillar"));
   document.getElementById("viewDept").addEventListener("click", () => setView("dept"));
+  document.getElementById("viewTodo").addEventListener("click", () => setView("todo"));
   document.getElementById("viewArchive").addEventListener("click", () => setView("archive"));
+
+  // tab bar (delegated — buttons are built at sign-in)
+  document.getElementById("tabBar").addEventListener("click", function (e) {
+    const t = e.target.closest(".tab");
+    if (t && t.dataset.tab) setActiveTab(t.dataset.tab);
+  });
+
+  // pillar / sub-section creation
+  document.getElementById("btnAddPillar").addEventListener("click", addPillar);
+  document.getElementById("btnAddSub").addEventListener("click", () => addSubSection(null));
+  document.getElementById("btnExportMaster").addEventListener("click", exportMaster);
+
+  // search
+  const si = document.getElementById("searchInput");
+  si.addEventListener("input", function () {
+    searchQuery = this.value.trim();
+    document.getElementById("searchClear").classList.toggle("hidden", !searchQuery);
+    if (activeTab === "master") renderMaster(); else render();
+  });
+  si.addEventListener("keydown", function (e) { if (e.key === "Escape") clearSearch(); });
+  document.getElementById("searchClear").addEventListener("click", clearSearch);
+
+  // Master view delegated clicks (dept cards jump to tab, LP editing, quarter controls)
+  document.getElementById("masterView").addEventListener("click", masterClickHandler);
+  document.getElementById("masterView").addEventListener("change", masterChangeHandler);
 
   // summary-strip click -> smooth-scroll to that pillar's full section
   document.getElementById("pillarStrip").addEventListener("click", function (e) {
@@ -1709,15 +2656,27 @@ function wire() {
     if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
-  // card clicks (delegated): rename pencils, restore button, otherwise open the editor
+  // card clicks (delegated): CRUD controls, rename pencils, restore, otherwise open the editor
   document.getElementById("view").addEventListener("click", function (e) {
+    const afp = e.target.closest("[data-add-first-pillar]");
+    if (afp) { addPillar(); return; }
+    const asub = e.target.closest("[data-add-sub-to]");
+    if (asub) { addSubSection(asub.getAttribute("data-add-sub-to")); return; }
+    const dp = e.target.closest("[data-del-pillar]");
+    if (dp) { deletePillar(dp.getAttribute("data-del-pillar")); return; }
+    const ds = e.target.closest("[data-del-sub]");
+    if (ds) { deleteSubSection(ds.getAttribute("data-del-sub")); return; }
+    const mp = e.target.closest("[data-move-pillar]");
+    if (mp) { movePillar(mp.getAttribute("data-move-pillar"), mp.getAttribute("data-dir")); return; }
+    const ms = e.target.closest("[data-move-sub]");
+    if (ms) { moveSubSection(ms.getAttribute("data-move-sub"), ms.getAttribute("data-dir")); return; }
     const ep = e.target.closest("[data-edit-pillar]");
     if (ep) { const h = ep.closest(".pillar-head"); beginRename("pillar", ep.getAttribute("data-edit-pillar"), h.querySelector("h2")); return; }
     const es = e.target.closest("[data-edit-sub]");
     if (es) { const h = es.closest(".subsection-head"); beginRename("sub", es.getAttribute("data-edit-sub"), h.querySelector("h3")); return; }
     const rb = e.target.closest("[data-restore]");
     if (rb) { restoreItem(rb.dataset.restore); return; }
-    const card = e.target.closest(".card");
+    const card = e.target.closest(".card, .todo-row[data-id]");
     if (card && card.dataset.id) openEditor(card.dataset.id);
   });
 
@@ -1763,9 +2722,9 @@ function wire() {
 
 function setView(v) {
   currentView = v;
-  document.getElementById("viewPillar").classList.toggle("active", v === "pillar");
-  document.getElementById("viewDept").classList.toggle("active", v === "dept");
-  document.getElementById("viewArchive").classList.toggle("active", v === "archive");
+  ["pillar", "dept", "todo", "archive"].forEach(k =>
+    document.getElementById("view" + k.charAt(0).toUpperCase() + k.slice(1))
+      .classList.toggle("active", v === k));
   render();
 }
 
@@ -1775,7 +2734,7 @@ function setView(v) {
 wire();
 showAuthGate();
 if (isUnconfigured()) {
-  setGateStatus("Setup needed — open SETUP-GUIDE.md and paste your Client ID and Drive File ID near the top of this file.");
+  setGateStatus("Setup needed — open SETUP-GUIDE.md and paste your Client ID and the four Drive file IDs (DRIVE_FILES) near the top of this file.");
 }
 </script>
 
